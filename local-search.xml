@@ -18,8 +18,8 @@
   
   <entry>
     <title>小云生日快乐~</title>
-    <link href="/2025/05/07/%E5%B0%8F%E4%BA%91%E7%94%9F%E6%97%A5%E5%BF%AB%E4%B9%90/%E5%B0%8F%E4%BA%91%E7%94%9F%E6%97%A5%E5%BF%AB%E4%B9%90/"/>
-    <url>/2025/05/07/%E5%B0%8F%E4%BA%91%E7%94%9F%E6%97%A5%E5%BF%AB%E4%B9%90/%E5%B0%8F%E4%BA%91%E7%94%9F%E6%97%A5%E5%BF%AB%E4%B9%90/</url>
+    <link href="/2025/05/07/%E5%B0%8F%E4%BA%91%E7%94%9F%E6%97%A5%E5%BF%AB%E4%B9%90/index/"/>
+    <url>/2025/05/07/%E5%B0%8F%E4%BA%91%E7%94%9F%E6%97%A5%E5%BF%AB%E4%B9%90/index/</url>
     
     <content type="html"><![CDATA[<!DOCTYPE html><html lang="en"><head>    <meta charset="UTF-8">    <title>生日快乐动画</title>    <link rel="stylesheet" href="styles.css"></head><body>    <div class="birthday-container">        <h1 class="birthday-message">生日快乐</h1>        <div class="cake">            <div class="candles">                <div class="flame"></div>                <div class="flame"></div>                <div class="flame"></div>            </div>        </div>    </div></body></html>]]></content>
     
