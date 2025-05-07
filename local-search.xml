@@ -5,8 +5,8 @@
   
   <entry>
     <title></title>
-    <link href="/2025/05/07/%E5%B0%8F%E4%BA%91%E7%94%9F%E6%97%A5%E5%BF%AB%E4%B9%90/%E5%B0%8F%E4%BA%91%E7%94%9F%E6%97%A5%E5%BF%AB%E4%B9%90/"/>
-    <url>/2025/05/07/%E5%B0%8F%E4%BA%91%E7%94%9F%E6%97%A5%E5%BF%AB%E4%B9%90/%E5%B0%8F%E4%BA%91%E7%94%9F%E6%97%A5%E5%BF%AB%E4%B9%90/</url>
+    <link href="/2025/05/07/%E5%B0%8F%E4%BA%91%E7%94%9F%E6%97%A5%E5%BF%AB%E4%B9%90/styles/"/>
+    <url>/2025/05/07/%E5%B0%8F%E4%BA%91%E7%94%9F%E6%97%A5%E5%BF%AB%E4%B9%90/styles/</url>
     
     <content type="html"><![CDATA[/* styles.css */body {    margin: 0;    height: 100vh;    display: flex;    justify-content: center;    align-items: center;    background-color: #f0e68c; /* 温馨的背景色 */    overflow: hidden;} .birthday-container {    text-align: center;} .birthday-message {    font-size: 3em;    color: #ffa07a; /* 漂亮的字体颜色 */    margin-bottom: 20px;    animation: blinkText 2s infinite;} .cake {    width: 150px;    height: 100px;    background-color: #fdd;    border-radius: 20px;    position: relative;    overflow: hidden;    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);} .candles {    position: absolute;    bottom: 100%;    left: 50%;    transform: translateX(-50%);    display: flex;    justify-content: space-around;    width: 100%;    margin-bottom: -10px;} .flame {    width: 15px;    height: 15px;    background-color: #ff6347; /* 火焰的颜色 */    border-radius: 50%;    box-shadow: 0 0 5px rgba(255, 100, 71, 0.7);    animation: flame 2s infinite;} @keyframes blinkText {    0%, 100% { opacity: 1; }    50% { opacity: 0.2; }} @keyframes flame {    0%, 100% { transform: translateY(0); }    50% { transform: translateY(-20px); }}]]></content>
     
@@ -17,12 +17,18 @@
   
   
   <entry>
-    <title></title>
+    <title>小云生日快乐~</title>
     <link href="/2025/05/07/%E5%B0%8F%E4%BA%91%E7%94%9F%E6%97%A5%E5%BF%AB%E4%B9%90/%E5%B0%8F%E4%BA%91%E7%94%9F%E6%97%A5%E5%BF%AB%E4%B9%90/"/>
     <url>/2025/05/07/%E5%B0%8F%E4%BA%91%E7%94%9F%E6%97%A5%E5%BF%AB%E4%B9%90/%E5%B0%8F%E4%BA%91%E7%94%9F%E6%97%A5%E5%BF%AB%E4%B9%90/</url>
     
     <content type="html"><![CDATA[<!DOCTYPE html><html lang="en"><head>    <meta charset="UTF-8">    <title>生日快乐动画</title>    <link rel="stylesheet" href="styles.css"></head><body>    <div class="birthday-container">        <h1 class="birthday-message">生日快乐</h1>        <div class="cake">            <div class="candles">                <div class="flame"></div>                <div class="flame"></div>                <div class="flame"></div>            </div>        </div>    </div></body></html>]]></content>
     
+    
+    <categories>
+      
+      <category>其他</category>
+      
+    </categories>
     
     
   </entry>
