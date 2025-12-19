@@ -62,8 +62,10 @@
 <meta property="og:image" content="https://s21.ax1x.com/2025/02/07/pEmESYj.png">
 <meta property="og:image" content="https://s21.ax1x.com/2025/02/07/pEmmmb6.png">
 <meta property="og:image" content="https://s21.ax1x.com/2025/02/07/pEmmCUU.png">
+<meta property="og:image" content="https://s41.ax1x.com/2025/12/18/pZ1GXnJ.png">
+<meta property="og:image" content="https://s41.ax1x.com/2025/12/18/pZ1GjB9.png">
 <meta property="article:published_time" content="2025-01-07T08:56:07.564Z">
-<meta property="article:modified_time" content="2025-12-17T11:33:52.108Z">
+<meta property="article:modified_time" content="2025-12-18T15:17:52.625Z">
 <meta property="article:author" content="LynBambAria">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://s21.ax1x.com/2025/01/07/pE9TnKI.md.png">
@@ -288,7 +290,7 @@
         
         
         
-          122 分钟
+          123 分钟
         
       </span>
     
@@ -339,7 +341,7 @@
               <p id="updated-time" class="note note-info" style="">
                 
                   
-                    本文最后更新于 2025年12月17日 晚上
+                    本文最后更新于 2025年12月18日 晚上
                   
                 
               </p>
@@ -1218,9 +1220,18 @@ add.c</p>
 注：移位操作符的操作数只能是整数</p>
 </blockquote>
 <ul>
-<li>移位操作符移动的是二级制位</li>
+<li>移位操作符移动的是二进制位</li>
 </ul>
-<figure class="highlight perl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs perl"><span class="hljs-keyword">int</span> main()<br>&#123;<br>    <span class="hljs-keyword">int</span> a = <span class="hljs-number">7</span>;<br>    <span class="hljs-keyword">int</span> b = a &lt;&lt; <span class="hljs-number">1</span>;<br><br>    <span class="hljs-keyword">printf</span>(<span class="hljs-string">&quot;<span class="hljs-variable">%d</span>\n&quot;</span>,a);<br>    <span class="hljs-keyword">printf</span>(<span class="hljs-string">&quot;<span class="hljs-variable">%d</span>\n&quot;</span>,b);<br><br>    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+<figure class="highlight perl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><code class="hljs perl"><span class="hljs-keyword">int</span> main()<br>&#123;<br>    <span class="hljs-keyword">int</span> a = <span class="hljs-number">7</span>;<br>    <span class="hljs-keyword">int</span> b = a &lt;&lt; <span class="hljs-number">1</span>;<br><br>    <span class="hljs-keyword">int</span> c = -<span class="hljs-number">7</span>;<br>    <span class="hljs-keyword">int</span> d = c &lt;&lt; <span class="hljs-number">1</span>;<br><br>    <span class="hljs-keyword">printf</span>(<span class="hljs-string">&quot;a = <span class="hljs-variable">%d</span>\n&quot;</span>,a);<br>    <span class="hljs-keyword">printf</span>(<span class="hljs-string">&quot;b = <span class="hljs-variable">%d</span>\n&quot;</span>,b);<br><br>    <span class="hljs-keyword">printf</span>(<span class="hljs-string">&quot;c = <span class="hljs-variable">%d</span>\n&quot;</span>,c);<br>    <span class="hljs-keyword">printf</span>(<span class="hljs-string">&quot;d = <span class="hljs-variable">%d</span>\n&quot;</span>,d);<br><br>    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br>&gt; 运行结果：<br>&gt; a = <span class="hljs-number">7</span><br>&gt; b = <span class="hljs-number">14</span><br>&gt; c = -<span class="hljs-number">7</span><br>&gt; d = -<span class="hljs-number">14</span><br></code></pre></td></tr></table></figure>
+<figure class="highlight dns"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs dns"><span class="hljs-number">7</span><br>原码：<span class="hljs-number">00000000</span> <span class="hljs-number">00000000</span> <span class="hljs-number">00000000</span> <span class="hljs-number">00000111</span><br>补码：<span class="hljs-number">00000000</span> <span class="hljs-number">00000000</span> <span class="hljs-number">00000000</span> <span class="hljs-number">00000111</span><br>反码：<span class="hljs-number">00000000</span> <span class="hljs-number">00000000</span> <span class="hljs-number">00000000</span> <span class="hljs-number">00000111</span><br></code></pre></td></tr></table></figure>
+<p><img src="https://s41.ax1x.com/2025/12/18/pZ1GXnJ.png" srcset="/img/loading.gif" lazyload alt=""></p>
+<figure class="highlight dns"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs dns">-<span class="hljs-number">7</span><br>原码：<span class="hljs-number">10000000</span> <span class="hljs-number">00000000</span> <span class="hljs-number">00000000</span> <span class="hljs-number">00000111</span><br>补码：<span class="hljs-number">11111111</span> <span class="hljs-number">11111111</span> <span class="hljs-number">11111111</span> <span class="hljs-number">11111000</span><br>反码：<span class="hljs-number">11111111</span> <span class="hljs-number">11111111</span> <span class="hljs-number">11111111</span> <span class="hljs-number">11111001</span><br></code></pre></td></tr></table></figure>
+<p><img src="https://s41.ax1x.com/2025/12/18/pZ1GjB9.png" srcset="/img/loading.gif" lazyload alt=""></p>
+<ul>
+<li>在内存中数据存储的是补码</li>
+<li>左移操作符有x2的效果</li>
+</ul>
+
                 
               </div>
             
@@ -1277,7 +1288,7 @@ add.c</p>
       
         <div class="license-meta-item license-meta-date">
           <div>更新于</div>
-          <div>2025年12月17日</div>
+          <div>2025年12月18日</div>
         </div>
       
       
