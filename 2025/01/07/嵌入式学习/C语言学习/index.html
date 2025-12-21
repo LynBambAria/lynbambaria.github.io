@@ -66,8 +66,10 @@
 <meta property="og:image" content="https://s41.ax1x.com/2025/12/18/pZ1GjB9.png">
 <meta property="og:image" content="https://s41.ax1x.com/2025/12/19/pZ1xwWD.png">
 <meta property="og:image" content="https://s41.ax1x.com/2025/12/19/pZ1xcwt.png">
+<meta property="og:image" content="https://s41.ax1x.com/2025/12/20/pZ31cxe.png">
+<meta property="og:image" content="https://s41.ax1x.com/2025/12/21/pZ3LBiF.png">
 <meta property="article:published_time" content="2025-01-07T08:56:07.564Z">
-<meta property="article:modified_time" content="2025-12-19T14:06:06.027Z">
+<meta property="article:modified_time" content="2025-12-21T14:43:10.407Z">
 <meta property="article:author" content="LynBambAria">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://s21.ax1x.com/2025/01/07/pE9TnKI.md.png">
@@ -292,7 +294,7 @@
         
         
         
-          124 分钟
+          130 分钟
         
       </span>
     
@@ -343,7 +345,7 @@
               <p id="updated-time" class="note note-info" style="">
                 
                   
-                    本文最后更新于 2025年12月19日 晚上
+                    本文最后更新于 2025年12月21日 晚上
                   
                 
               </p>
@@ -1247,6 +1249,71 @@ add.c</p>
 <ul>
 <li>绝大多数编译器采用算术右移</li>
 </ul>
+<h2 id="6-4-位操作符">6.4 位操作符</h2>
+<blockquote>
+<p>&amp; 按位与<br>
+| 按位或<br>
+^ 按位异或<br>
+注：他们的操作数必须是整数</p>
+</blockquote>
+<figure class="highlight perl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs perl"><span class="hljs-keyword">int</span> main()<br>&#123;<br>    <span class="hljs-keyword">int</span> a = <span class="hljs-number">3</span>;<br>    <span class="hljs-keyword">int</span> b = -<span class="hljs-number">5</span>;<br><br>    <span class="hljs-keyword">int</span> c = a &amp; b;<br>    <span class="hljs-keyword">int</span> d = a | b;<br>    <span class="hljs-keyword">int</span> e = a ^ b;<br><br>    <span class="hljs-keyword">printf</span>(<span class="hljs-string">&quot;c = <span class="hljs-variable">%d</span>\n&quot;</span>,c);<br>    <span class="hljs-keyword">printf</span>(<span class="hljs-string">&quot;d = <span class="hljs-variable">%d</span>\n&quot;</span>,d);<br>    <span class="hljs-keyword">printf</span>(<span class="hljs-string">&quot;e = <span class="hljs-variable">%d</span>\n&quot;</span>,e);<br><br>    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br><br>&gt; 运行结果：<br>&gt; c =  <span class="hljs-number">3</span><br>&gt; d = -<span class="hljs-number">5</span><br>&gt; e = -<span class="hljs-number">8</span><br></code></pre></td></tr></table></figure>
+<figure class="highlight dns"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs dns">&amp; 相同位为<span class="hljs-number">1</span>，反之为<span class="hljs-number">0</span><br><span class="hljs-number">00000000</span> <span class="hljs-number">00000000</span> <span class="hljs-number">00000000</span> <span class="hljs-number">00000011 3</span>的补码<br><span class="hljs-number">11111111</span> <span class="hljs-number">11111111</span> <span class="hljs-number">11111111</span> <span class="hljs-number">11111011</span> -<span class="hljs-number">5</span>的补码<br><span class="hljs-number">00000000</span> <span class="hljs-number">00000000</span> <span class="hljs-number">00000000</span> <span class="hljs-number">00000011 3</span> &amp; -<span class="hljs-number">5</span>的补码，因为符号位为<span class="hljs-number">0</span>，所以正数原码与补码相同<br></code></pre></td></tr></table></figure>
+<figure class="highlight dns"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs dns">| 相同位只要有<span class="hljs-number">1</span>就为<span class="hljs-number">1</span>，同为<span class="hljs-number">0</span>才为<span class="hljs-number">0</span><br><span class="hljs-number">00000000</span> <span class="hljs-number">00000000</span> <span class="hljs-number">00000000</span> <span class="hljs-number">00000011 3</span>的补码<br><span class="hljs-number">11111111</span> <span class="hljs-number">11111111</span> <span class="hljs-number">11111111</span> <span class="hljs-number">11111011</span> -<span class="hljs-number">5</span>的补码<br><span class="hljs-number">11111111</span> <span class="hljs-number">11111111</span> <span class="hljs-number">11111111</span> <span class="hljs-number">11111011 3</span> | -<span class="hljs-number">5</span>的补码，因为符号位为<span class="hljs-number">1</span>，所以负数原码需要反推<br><span class="hljs-number">11111111</span> <span class="hljs-number">11111111</span> <span class="hljs-number">11111111</span> <span class="hljs-number">11111010 3</span> | -<span class="hljs-number">5</span>的反码<br><span class="hljs-number">10000000</span> <span class="hljs-number">00000000</span> <span class="hljs-number">00000000</span> <span class="hljs-number">00000101 3</span> | -<span class="hljs-number">5</span>的原码，-<span class="hljs-number">5</span><br></code></pre></td></tr></table></figure>
+<figure class="highlight dns"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs dns">^ 相同位相同为<span class="hljs-number">0</span>，相异为<span class="hljs-number">1</span><br><span class="hljs-number">00000000</span> <span class="hljs-number">00000000</span> <span class="hljs-number">00000000</span> <span class="hljs-number">00000011 3</span>的补码<br><span class="hljs-number">11111111</span> <span class="hljs-number">11111111</span> <span class="hljs-number">11111111</span> <span class="hljs-number">11111011</span> -<span class="hljs-number">5</span>的补码<br><span class="hljs-number">11111111</span> <span class="hljs-number">11111111</span> <span class="hljs-number">11111111</span> <span class="hljs-number">11111000 3</span> ^ -<span class="hljs-number">5</span>的补码，因为符号位为<span class="hljs-number">1</span>，所以负数原码需要反推<br><span class="hljs-number">11111111</span> <span class="hljs-number">11111111</span> <span class="hljs-number">11111111</span> <span class="hljs-number">11110111 3</span> ^ -<span class="hljs-number">5</span>的反码<br><span class="hljs-number">10000000</span> <span class="hljs-number">00000000</span> <span class="hljs-number">00000000</span> <span class="hljs-number">00001000 3</span> ^ -<span class="hljs-number">5</span>的原码，-<span class="hljs-number">8</span><br></code></pre></td></tr></table></figure>
+<h3 id="6-4-1-一道面试题">6.4.1 一道面试题</h3>
+<p>不创建临时变量（第三个变量），实现两个数的交换。</p>
+<figure class="highlight perl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs perl"><span class="hljs-keyword">int</span> main()<br>&#123;<br>    <span class="hljs-keyword">int</span> a = <span class="hljs-number">3</span>;<br>    <span class="hljs-keyword">int</span> b = <span class="hljs-number">5</span>;<br>    <span class="hljs-keyword">printf</span>(<span class="hljs-string">&quot;交换前：a = <span class="hljs-variable">%d</span> b = <span class="hljs-variable">%d</span>\n&quot;</span>,a,b);<br><br>    a = a + b;<br>    b = a - b;<br>    a = a - b;<br>    <span class="hljs-keyword">printf</span>(<span class="hljs-string">&quot;交换后：a = <span class="hljs-variable">%d</span> b = <span class="hljs-variable">%d</span>\n&quot;</span>,a,b);<br><br>    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br><br>潜在问题：a + b 可能会溢出<span class="hljs-keyword">int</span>的最大范围<br></code></pre></td></tr></table></figure>
+<figure class="highlight perl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs perl"><span class="hljs-keyword">int</span> main()<br>&#123;<br>    <span class="hljs-keyword">int</span> a = <span class="hljs-number">3</span>;<br>    <span class="hljs-keyword">int</span> b = <span class="hljs-number">5</span>;<br>    <span class="hljs-keyword">printf</span>(<span class="hljs-string">&quot;交换前：a = <span class="hljs-variable">%d</span> b = <span class="hljs-variable">%d</span>\n&quot;</span>,a,b);<br><br>    a = a ^ b;<span class="hljs-regexp">//a</span> = <span class="hljs-number">3</span> ^ <span class="hljs-number">5</span><br>    b = a ^ b;<span class="hljs-regexp">//</span>b = <span class="hljs-number">3</span> ^ <span class="hljs-number">5</span> ^ <span class="hljs-number">5</span> = <span class="hljs-number">3</span><br>    a = a ^ b;<span class="hljs-regexp">//a</span> = <span class="hljs-number">3</span> ^ <span class="hljs-number">5</span> ^ <span class="hljs-number">3</span> = <span class="hljs-number">5</span><br>    <span class="hljs-keyword">printf</span>(<span class="hljs-string">&quot;交换后：a = <span class="hljs-variable">%d</span> b = <span class="hljs-variable">%d</span>\n&quot;</span>,a,b);<br><br>    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br><br></code></pre></td></tr></table></figure>
+<ul>
+<li>相同的数字异或(^)为0，0异或任何一个非零数a结果为a</li>
+<li>异或操作符支持交换律，a ^ a ^ b = b,a ^ b ^ a = b</li>
+</ul>
+<h2 id="6-5-赋值操作符">6.5 赋值操作符</h2>
+<figure class="highlight abnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs abnf">int a <span class="hljs-operator">=</span> <span class="hljs-number">0</span><span class="hljs-comment">;//初始化</span><br><span class="hljs-attribute">a</span> <span class="hljs-operator">=</span> <span class="hljs-number">10</span><span class="hljs-comment">;//赋值</span><br></code></pre></td></tr></table></figure>
+<p>也可以连续赋值：<br>
+<img src="https://s41.ax1x.com/2025/12/20/pZ31cxe.png" srcset="/img/loading.gif" lazyload alt=""></p>
+<p><strong>复合赋值符</strong><br>
+<code>+= -= *= /= %= &gt;&gt;= &lt;&lt;= &amp;= |= ^=</code></p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs csharp"><span class="hljs-function"><span class="hljs-built_in">int</span> <span class="hljs-title">main</span>()</span><br>&#123;<br>    <span class="hljs-built_in">int</span> a = <span class="hljs-number">3</span>;<br>    a = a + <span class="hljs-number">5</span>;<br>    a += <span class="hljs-number">5</span>;<br><br>    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+<h2 id="6-6-单目操作符">6.6 单目操作符</h2>
+<h3 id="6-6-1-单目操作符介绍">6.6.1 单目操作符介绍</h3>
+<blockquote>
+<p>！  逻辑反操作<br>
+<code>-</code> 负值<br>
+<code>+</code> 正值<br>
+&amp;  取地址<br>
+sizeof 取地址<br>
+~ 对一个数的二级制按位取反<br>
+– 前置、后置–<br>
+++ 前置、后置++<br>
+<code>*</code> 间接访问操作符（解引用操作符）<br>
+(类型) 强制类型转换</p>
+</blockquote>
+<h3 id="6-6-2-对一个数的二级制按位取反">6.6.2 ~ 对一个数的二级制按位取反</h3>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span><br><span class="hljs-function"></span>&#123;<br>    <span class="hljs-type">int</span> a = <span class="hljs-number">0</span>;<br>    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;%d\n&quot;</span>,~a);<br><br>    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br><br>&gt; 运行结果：<br>&gt; <span class="hljs-number">-1</span><br></code></pre></td></tr></table></figure>
+<figure class="highlight dns"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs dns">~ 二级制按位取反<br><span class="hljs-number">0</span><br><span class="hljs-number">00000000</span> <span class="hljs-number">00000000</span> <span class="hljs-number">00000000</span> <span class="hljs-number">00000000</span> 补码<br><span class="hljs-number">11111111</span> <span class="hljs-number">11111111</span> <span class="hljs-number">11111111</span> <span class="hljs-number">11111111</span> ~ 后的补码<br><span class="hljs-number">11111111</span> <span class="hljs-number">11111111</span> <span class="hljs-number">11111111</span> <span class="hljs-number">11111110</span> ~ 后的反码<br><span class="hljs-number">10000000</span> <span class="hljs-number">00000000</span> <span class="hljs-number">00000000</span> <span class="hljs-number">00000001</span> ~ 后的原码 -<span class="hljs-number">1</span> <br></code></pre></td></tr></table></figure>
+<h3 id="6-6-3-sizeof和数组">6.6.3 sizeof和数组</h3>
+<p><img src="https://s41.ax1x.com/2025/12/21/pZ3LBiF.png" srcset="/img/loading.gif" lazyload alt=""></p>
+<ul>
+<li>在test1和test2中，数组以首地址的形式传入形参中，所以表示的是首地址，也就是4</li>
+</ul>
+<h2 id="6-7-关系操作符">6.7 关系操作符</h2>
+<blockquote>
+<p><code>&gt;</code><br>
+<code>&gt;=</code><br>
+&lt;<br>
+&lt;=<br>
+!=    测试是否不相等<br>
+==    测试是否相等</p>
+</blockquote>
+<p>注：比较字符串是否相等用strcmp函数</p>
+<h2 id="6-8-逻辑操作符">6.8 逻辑操作符</h2>
+<blockquote>
+<p>&amp;&amp;    逻辑与<br>
+||    逻辑或</p>
+</blockquote>
+<h3 id="6-8-1-一道笔试题">6.8.1 一道笔试题</h3>
+<figure class="highlight perl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs perl"><span class="hljs-keyword">int</span> main()<br>&#123;<br>    <span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>,a = <span class="hljs-number">0</span>,b = <span class="hljs-number">2</span>,c = <span class="hljs-number">3</span>,d = <span class="hljs-number">4</span>;<br>    i = a++ &amp;&amp; ++b &amp;&amp; d++;<br>    <br>    <span class="hljs-keyword">printf</span>(<span class="hljs-string">&quot;a = <span class="hljs-variable">%d</span>\n b = <span class="hljs-variable">%d</span>\n c = <span class="hljs-variable">%d</span>\n d = <span class="hljs-variable">%d</span>\n&quot;</span>,a,b,c,d);<br><br>    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
 
                 
               </div>
@@ -1304,7 +1371,7 @@ add.c</p>
       
         <div class="license-meta-item license-meta-date">
           <div>更新于</div>
-          <div>2025年12月19日</div>
+          <div>2025年12月21日</div>
         </div>
       
       
