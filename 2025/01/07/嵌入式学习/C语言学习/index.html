@@ -68,8 +68,11 @@
 <meta property="og:image" content="https://s41.ax1x.com/2025/12/19/pZ1xcwt.png">
 <meta property="og:image" content="https://s41.ax1x.com/2025/12/20/pZ31cxe.png">
 <meta property="og:image" content="https://s41.ax1x.com/2025/12/21/pZ3LBiF.png">
+<meta property="og:image" content="https://s41.ax1x.com/2025/12/22/pZ8895q.png">
+<meta property="og:image" content="https://s41.ax1x.com/2025/12/22/pZ8a4Ag.png">
+<meta property="og:image" content="https://s41.ax1x.com/2025/12/22/pZ8rmc9.png">
 <meta property="article:published_time" content="2025-01-07T08:56:07.564Z">
-<meta property="article:modified_time" content="2025-12-21T14:43:10.407Z">
+<meta property="article:modified_time" content="2025-12-22T14:30:18.830Z">
 <meta property="article:author" content="LynBambAria">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://s21.ax1x.com/2025/01/07/pE9TnKI.md.png">
@@ -283,7 +286,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          15k 字
+          16k 字
         
       </span>
     
@@ -294,7 +297,7 @@
         
         
         
-          130 分钟
+          131 分钟
         
       </span>
     
@@ -345,7 +348,7 @@
               <p id="updated-time" class="note note-info" style="">
                 
                   
-                    本文最后更新于 2025年12月21日 晚上
+                    本文最后更新于 2025年12月22日 晚上
                   
                 
               </p>
@@ -1313,7 +1316,16 @@ sizeof 取地址<br>
 ||    逻辑或</p>
 </blockquote>
 <h3 id="6-8-1-一道笔试题">6.8.1 一道笔试题</h3>
-<figure class="highlight perl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs perl"><span class="hljs-keyword">int</span> main()<br>&#123;<br>    <span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>,a = <span class="hljs-number">0</span>,b = <span class="hljs-number">2</span>,c = <span class="hljs-number">3</span>,d = <span class="hljs-number">4</span>;<br>    i = a++ &amp;&amp; ++b &amp;&amp; d++;<br>    <br>    <span class="hljs-keyword">printf</span>(<span class="hljs-string">&quot;a = <span class="hljs-variable">%d</span>\n b = <span class="hljs-variable">%d</span>\n c = <span class="hljs-variable">%d</span>\n d = <span class="hljs-variable">%d</span>\n&quot;</span>,a,b,c,d);<br><br>    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+<figure class="highlight node-repl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs node-repl">int main()<br>&#123;<br>    int i = 0,a = 0,b = 2,c = 3,d = 4;<br>    i = a++ &amp;&amp; ++b &amp;&amp; d++;<br>    <br>    printf(&quot;a = %d\nb = %d\nc = %d\nd = %d\n&quot;,a,b,c,d);<br><br>    return 0;<br>&#125;<br><br><span class="hljs-meta prompt_">&gt;</span> <span class="language-javascript">运行结果：</span><br><span class="hljs-meta prompt_">&gt;</span> <span class="language-javascript">a = <span class="hljs-number">1</span></span><br><span class="hljs-meta prompt_">&gt;</span> <span class="language-javascript">b = <span class="hljs-number">2</span></span><br><span class="hljs-meta prompt_">&gt;</span> <span class="language-javascript">c = <span class="hljs-number">3</span></span><br><span class="hljs-meta prompt_">&gt;</span> <span class="language-javascript">d = <span class="hljs-number">4</span></span><br></code></pre></td></tr></table></figure>
+<p><img src="https://s41.ax1x.com/2025/12/22/pZ8895q.png" srcset="/img/loading.gif" lazyload alt=""><br>
+在a++的时候，先使用再+1，所以值为0，后续操作不在进行</p>
+<p>变式1：a变为1时</p>
+<figure class="highlight node-repl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs node-repl">int main()<br>&#123;<br>    int i = 0,a = 1,b = 2,c = 3,d = 4;<br>    i = a++ &amp;&amp; ++b &amp;&amp; d++;<br>    <br>    printf(&quot;a = %d\nb = %d\nc = %d\nd = %d\n&quot;,a,b,c,d);<br><br>    return 0;<br>&#125;<br><br><span class="hljs-meta prompt_">&gt;</span> <span class="language-javascript">运行结果：</span><br><span class="hljs-meta prompt_">&gt;</span> <span class="language-javascript">a = <span class="hljs-number">2</span></span><br><span class="hljs-meta prompt_">&gt;</span> <span class="language-javascript">b = <span class="hljs-number">3</span></span><br><span class="hljs-meta prompt_">&gt;</span> <span class="language-javascript">c = <span class="hljs-number">3</span></span><br><span class="hljs-meta prompt_">&gt;</span> <span class="language-javascript">d = <span class="hljs-number">5</span></span><br></code></pre></td></tr></table></figure>
+<p><img src="https://s41.ax1x.com/2025/12/22/pZ8a4Ag.png" srcset="/img/loading.gif" lazyload alt=""></p>
+<p>变式2：&amp;&amp;变为||时</p>
+<figure class="highlight node-repl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs node-repl">int main()<br>&#123;<br>    int i = 0,a = 1,b = 2,c = 3,d = 4;<br>    i = a++ || ++b || d++;<br>    <br>    printf(&quot;a = %d\nb = %d\nc = %d\nd = %d\n&quot;,a,b,c,d);<br><br>    return 0;<br>&#125;<br><br><span class="hljs-meta prompt_">&gt;</span> <span class="language-javascript">运行结果：</span><br><span class="hljs-meta prompt_">&gt;</span> <span class="language-javascript">a = <span class="hljs-number">2</span></span><br><span class="hljs-meta prompt_">&gt;</span> <span class="language-javascript">b = <span class="hljs-number">2</span></span><br><span class="hljs-meta prompt_">&gt;</span> <span class="language-javascript">c = <span class="hljs-number">3</span></span><br><span class="hljs-meta prompt_">&gt;</span> <span class="language-javascript">d = <span class="hljs-number">4</span></span><br></code></pre></td></tr></table></figure>
+<p><img src="https://s41.ax1x.com/2025/12/22/pZ8rmc9.png" srcset="/img/loading.gif" lazyload alt=""><br>
+在a++的时候，先使用再+1，所以值为1，后续操作不在进行</p>
 
                 
               </div>
@@ -1371,7 +1383,7 @@ sizeof 取地址<br>
       
         <div class="license-meta-item license-meta-date">
           <div>更新于</div>
-          <div>2025年12月21日</div>
+          <div>2025年12月22日</div>
         </div>
       
       
