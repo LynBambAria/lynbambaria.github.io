@@ -19,15 +19,15 @@
   <meta name="author" content="LynBambAria">
   <meta name="keywords" content="">
   
-    <meta name="description" content="本次学习的视频是黑马程序员的黑马程序员Flutter从入门到实战全套视频教程，从Dart语言到Flutter核心框架AI辅助开发，一套搞定Android、iOS、HarmonyOS及Web 本次的博客的代码全在flutter的环境下运行 flutter只需要一套Dart代码，即可编译生成原生性能的各类平台（Android&#x2F;IOS&#x2F;harmonyOS…）应用 一、Dart语言基础 1.1 安装Dar">
+    <meta name="description" content="本次学习的视频是黑马程序员的黑马程序员Flutter从入门到实战全套视频教程，从Dart语言到Flutter核心框架AI辅助开发，一套搞定Android、iOS、HarmonyOS及Web 本次的博客的代码全在flutter的环境下运行 flutter只需要一套Dart代码，即可编译生成原生性能的各类平台（Android&#x2F;IOS&#x2F;harmonyOS…）应用">
 <meta property="og:type" content="article">
 <meta property="og:title" content="flutter学习">
 <meta property="og:url" content="http://example.com/2026/01/09/%E5%B5%8C%E5%85%A5%E5%BC%8F%E5%AD%A6%E4%B9%A0/flutter%E5%AD%A6%E4%B9%A0/index.html">
 <meta property="og:site_name" content="凛竹九歌.">
-<meta property="og:description" content="本次学习的视频是黑马程序员的黑马程序员Flutter从入门到实战全套视频教程，从Dart语言到Flutter核心框架AI辅助开发，一套搞定Android、iOS、HarmonyOS及Web 本次的博客的代码全在flutter的环境下运行 flutter只需要一套Dart代码，即可编译生成原生性能的各类平台（Android&#x2F;IOS&#x2F;harmonyOS…）应用 一、Dart语言基础 1.1 安装Dar">
+<meta property="og:description" content="本次学习的视频是黑马程序员的黑马程序员Flutter从入门到实战全套视频教程，从Dart语言到Flutter核心框架AI辅助开发，一套搞定Android、iOS、HarmonyOS及Web 本次的博客的代码全在flutter的环境下运行 flutter只需要一套Dart代码，即可编译生成原生性能的各类平台（Android&#x2F;IOS&#x2F;harmonyOS…）应用">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2026-01-09T09:25:26.350Z">
-<meta property="article:modified_time" content="2026-01-09T13:29:38.549Z">
+<meta property="article:modified_time" content="2026-01-10T15:48:51.245Z">
 <meta property="article:author" content="LynBambAria">
 <meta name="twitter:card" content="summary_large_image">
   
@@ -240,7 +240,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          323 字
+          732 字
         
       </span>
     
@@ -251,7 +251,7 @@
         
         
         
-          3 分钟
+          7 分钟
         
       </span>
     
@@ -302,7 +302,7 @@
               <p id="updated-time" class="note note-info" style="">
                 
                   
-                    本文最后更新于 2026年1月9日 晚上
+                    本文最后更新于 2026年1月10日 晚上
                   
                 
               </p>
@@ -313,6 +313,7 @@
                 <p>本次学习的视频是黑马程序员的<a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1wR4Xz6EqG/?spm_id_from=333.337.search-card.all.click&amp;vd_source=1e7a1d78191a0fa98e1dcb37d701d4f6">黑马程序员Flutter从入门到实战全套视频教程，从Dart语言到Flutter核心框架AI辅助开发，一套搞定Android、iOS、HarmonyOS及Web</a><br>
 本次的博客的代码全在flutter的环境下运行</p>
 <p>flutter只需要<strong>一套Dart</strong>代码，即可编译生成<strong>原生性能</strong>的各类平台（Android/IOS/harmonyOS…）应用</p>
+<span id="more"></span>
 <h1>一、Dart语言基础</h1>
 <h2 id="1-1-安装Dart基础学习环境">1.1 安装Dart基础学习环境</h2>
 <p><strong>DartSDK</strong><br>
@@ -335,6 +336,33 @@ Trae中扩展，安装Dart</p>
 <li>分号：Dart文件中 <strong>绝大部分语句</strong>都要 <strong>加分号</strong>结尾，像<code>&#123;&#125;</code>后通常不用加分号</li>
 </ul>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-title function_">main</span>(<span class="hljs-params">List&lt;<span class="hljs-built_in">String</span>&gt; args</span>) &#123;<br>  <span class="hljs-title function_">print</span>(<span class="hljs-string">&#x27;hello world&#x27;</span>);<br>&#125;<br></code></pre></td></tr></table></figure>
+<p><strong>格式化快捷键</strong><br>
+格式化整个文件：<code>Shift + Alt + F (Windows/Linux)</code><br>
+格式化选中代码：<code>Ctrl + K, Ctrl + F</code></p>
+<h2 id="1-2-Dart中的变量声明——var">1.2 Dart中的变量声明——<strong>var</strong></h2>
+<ul>
+<li>场景：当一个人的年龄从<strong>20岁</strong>变成<strong>21岁</strong>，存储数据发生变化，需要用变量来进行声明</li>
+<li>关键字：<strong>var</strong></li>
+<li>语法：<strong>var</strong> 变量名 <strong>= 值/表达式;</strong></li>
+<li>注意：使用var声明的变量，其类型在<strong>第一次赋值</strong>之后确定，不能再赋值其他类型的值</li>
+</ul>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs dart"><span class="hljs-keyword">void</span> main(<span class="hljs-built_in">List</span>&lt;<span class="hljs-built_in">String</span>&gt; args) &#123;<br>  <span class="hljs-keyword">var</span> age = <span class="hljs-number">20</span>;<br>  <span class="hljs-built_in">print</span>(age); <span class="hljs-comment">//20</span><br>  age = <span class="hljs-number">21</span>;<br>  <span class="hljs-built_in">print</span>(age); <span class="hljs-comment">//21</span><br>  age = <span class="hljs-number">20</span> + <span class="hljs-number">21</span>;<br>  <span class="hljs-built_in">print</span>(age); <span class="hljs-comment">//41</span><br>  age = <span class="hljs-string">&quot;adddd&quot;</span>;<br>  <span class="hljs-built_in">print</span>(age); <span class="hljs-comment">//error</span><br>&#125;<br></code></pre></td></tr></table></figure>
+<h2 id="1-3-Dart中的常量声明———const">1.3 Dart中的常量声明———<strong>const</strong></h2>
+<ul>
+<li>场景：当做圆形计算的时候，<strong>π</strong>的值一开始就是被确定的，且不允许更改，使用<strong>const</strong>进行声明</li>
+<li>关键字：<strong>const</strong></li>
+<li>语法：<strong>const</strong> 属性名 <strong>= 值/表达式;</strong></li>
+<li>注意：使用var声明的变量，其类型在<strong>第一次赋值</strong>之后确定，不能再赋值其他类型的值</li>
+</ul>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs dart"><span class="hljs-keyword">void</span> main(<span class="hljs-built_in">List</span>&lt;<span class="hljs-built_in">String</span>&gt; args) &#123;<br>  <span class="hljs-keyword">const</span> <span class="hljs-built_in">num</span> = <span class="hljs-number">3.1415926</span>;<br>  <span class="hljs-comment">// num=3.14;error，无法修改</span><br>  <span class="hljs-keyword">const</span> length = <span class="hljs-number">2</span> * <span class="hljs-built_in">num</span> * <span class="hljs-number">10</span>; <span class="hljs-comment">//计算圆的周长</span><br>  <span class="hljs-built_in">print</span>(length); <span class="hljs-comment">//62.831852</span><br>&#125;<br><br><span class="hljs-keyword">void</span> main(<span class="hljs-built_in">List</span>&lt;<span class="hljs-built_in">String</span>&gt; args) &#123;<br>  <span class="hljs-keyword">var</span> num1 = <span class="hljs-number">3.1415926</span>;<br>  <span class="hljs-keyword">const</span> <span class="hljs-built_in">num</span> = num1;<span class="hljs-comment">//error,const 表达式里面的值不允许有变量值</span><br>  <span class="hljs-keyword">const</span> length = <span class="hljs-number">2</span> * <span class="hljs-built_in">num</span> * <span class="hljs-number">10</span>; <span class="hljs-comment">//计算圆的周长</span><br>  <span class="hljs-built_in">print</span>(length); <span class="hljs-comment">//62.831852</span><br>&#125;<br></code></pre></td></tr></table></figure>
+<h2 id="1-4-Dart中的常量声明———final">1.4 Dart中的常量声明———<strong>final</strong></h2>
+<ul>
+<li>场景：当我们需要<strong>当前时间</strong>作为当前唯一标准的操作时间，时间一旦被确定就不可以被修改</li>
+<li>关键字：<strong>const</strong></li>
+<li>语法：<strong>const</strong> 属性名 <strong>= 值/表达式;</strong></li>
+<li>注意：使用var声明的变量，其类型在<strong>第一次赋值</strong>之后确定，不能再赋值其他类型的值</li>
+</ul>
+
                 
               </div>
             
@@ -391,7 +419,7 @@ Trae中扩展，安装Dart</p>
       
         <div class="license-meta-item license-meta-date">
           <div>更新于</div>
-          <div>2026年1月9日</div>
+          <div>2026年1月10日</div>
         </div>
       
       
