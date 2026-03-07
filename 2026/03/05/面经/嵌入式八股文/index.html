@@ -26,10 +26,15 @@
 <meta property="og:site_name" content="凛竹九歌.">
 <meta property="og:description" content="C和C++哪个熟悉 讲讲指针，为什么有指针 static inline 位运算 C和C++的区别 封装、继承、多态 构造函数和析构函数 默认构造函数、拷贝构造、移动构造 右值引用和移动语义 虚函数表和虚函数指针 智能指针 RTOS和Linux的区别 讲讲中断 RTOS调度算法和任务切换 任务间通信 消息队列 任务状态 什么时候会进入阻塞态 优先级反转和优先级继承 RTOS的内存管理机制 内存碎片">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/2026/03/05/%E9%9D%A2%E7%BB%8F/%E5%B5%8C%E5%85%A5%E5%BC%8F%E5%85%AB%E8%82%A1%E6%96%87/assets/0_1.png">
+<meta property="og:image" content="http://example.com/2026/03/05/%E9%9D%A2%E7%BB%8F/%E5%B5%8C%E5%85%A5%E5%BC%8F%E5%85%AB%E8%82%A1%E6%96%87/assets/0_2.png">
+<meta property="og:image" content="http://example.com/2026/03/05/%E9%9D%A2%E7%BB%8F/%E5%B5%8C%E5%85%A5%E5%BC%8F%E5%85%AB%E8%82%A1%E6%96%87/assets/0_3.png">
+<meta property="og:image" content="http://example.com/2026/03/05/%E9%9D%A2%E7%BB%8F/%E5%B5%8C%E5%85%A5%E5%BC%8F%E5%85%AB%E8%82%A1%E6%96%87/assets/0_4.png">
 <meta property="article:published_time" content="2026-03-05T11:20:47.034Z">
-<meta property="article:modified_time" content="2026-03-07T03:44:19.968Z">
+<meta property="article:modified_time" content="2026-03-07T07:37:34.527Z">
 <meta property="article:author" content="LynBambAria">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://example.com/2026/03/05/%E9%9D%A2%E7%BB%8F/%E5%B5%8C%E5%85%A5%E5%BC%8F%E5%85%AB%E8%82%A1%E6%96%87/assets/0_1.png">
   
   
     <meta name="referrer" content="no-referrer-when-downgrade">
@@ -240,7 +245,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          3.4k 字
+          18k 字
         
       </span>
     
@@ -251,7 +256,7 @@
         
         
         
-          29 分钟
+          151 分钟
         
       </span>
     
@@ -302,7 +307,7 @@
               <p id="updated-time" class="note note-info" style="">
                 
                   
-                    本文最后更新于 2026年3月7日 中午
+                    本文最后更新于 2026年3月7日 下午
                   
                 
               </p>
@@ -626,6 +631,798 @@ RTOS的内存管理机制<br>
 </ul>
 </li>
 </ol>
+<h2 id="4-UART">4. UART</h2>
+<h3 id="4-1-UART基础概念">4.1 UART基础概念</h3>
+<h4 id="4-1-1-串行-vs-并行">4.1.1 串行 vs. 并行</h4>
+<p>想象一下排队过安检：</p>
+<ul>
+<li>
+<p><strong>串行 (Serial):</strong> 就像大家一个接一个排队通过安检门，每次只能过一个人（一个比特）。UART 就是这种方式，数据一位一位地在单根线上发送。 <strong>优点：</strong> 省线，适合长距离； <strong>缺点：</strong> 速度相对较慢。</p>
+</li>
+<li>
+<p><strong>并行 (Parallel):</strong> 就像同时开了好几个安检门，大家可以同时通过。数据同时在多根线上发送。 <strong>优点：</strong> 速度快； <strong>缺点：</strong> 需要更多线，成本高，不适合长距离。</p>
+</li>
+</ul>
+<h4 id="4-1-2波特率-Baud-Rate">4.1.2波特率(Baud Rate)</h4>
+<p>波特率就好比两个人打电话时 <strong>说话的速度</strong> 。你说话快，对方也要能听得快；你说话慢，对方也要能听得慢。只有双方速度（波特率）约定一致，才能正确理解对方的信息。</p>
+<p>常见的波特率有 9600, 115200 等，单位是 bps (bits per second)，即每秒传输多少比特。</p>
+<h4 id="4-1-3-数据帧-Data-Frame">4.1.3 数据帧 (Data Frame)</h4>
+<p>为了确保数据正确传输，UART 通信时会把数据打包成一个个&quot;数据帧&quot;来发送。就像写信需要信封、地址、邮票一样，数据帧也有固定格式。</p>
+<p>一个典型的数据帧通常包含：</p>
+<ul>
+<li>
+<p><strong>起始位 (Start Bit):</strong> 标志着一个新数据帧的开始，通常是低电平（逻辑 0）。</p>
+</li>
+<li>
+<p><strong>数据位 (Data Bits):</strong> 这才是我们要传输的真正数据，通常是 5 到 8 位。</p>
+</li>
+<li>
+<p><strong>校验位 (Parity Bit) (可选):</strong> 用于检查数据在传输过程中是否出错（奇校验、偶校验或无校验）。</p>
+</li>
+<li>
+<p><strong>停止位 (Stop Bit):</strong> 标志着数据帧的结束，通常是高电平（逻辑 1），可以是 1 位、1.5 位或 2 位。</p>
+</li>
+</ul>
+<div style="text-align:center;">UART 数据帧结构</div>
+<div style="text-align:center;">起始位</div>
+<div style="text-align:center;">数据位 (7/8)</div>
+<div style="text-align:center;">校验位 (可选)</div>
+<div style="text-align:center;">停止位 (1/2)</div>
+<div style="text-align:center;">空闲 (高电平)</div>
+<div style="text-align:center;">→ 时间</div>
+<p><strong>重要：</strong> 通信双方必须约定好相同的数据帧格式（数据位、校验位、停止位），否则就会&quot;鸡同鸭讲&quot;，无法解析数据。</p>
+<h4 id="4-1-4-TX-和-RX">4.1.4 TX 和 RX</h4>
+<p>UART 通信至少需要两根线：</p>
+<ul>
+<li>
+<p><strong>TX (Transmit):</strong> 发送数据线。设备的 TX 连接到另一个设备的 RX。</p>
+</li>
+<li>
+<p><strong>RX (Receive):</strong> 接收数据线。设备的 RX 连接到另一个设备的 TX。</p>
+</li>
+</ul>
+<p>记住： <strong>TX 要连接对方的 RX，RX 要连接对方的 TX</strong> ，交叉连接，就像打电话一样，你的话筒对着别人的听筒。</p>
+<p>通常还需要一根 <strong>GND (Ground)</strong> 线，即地线，用来统一双方的参考电平，确保信号稳定。</p>
+<h3 id="4-2-硬件的连接">4.2 硬件的连接</h3>
+<p>理论讲完了，我们来看看实际怎么连接。最常见的场景是将单片机（比如 STM32）和电脑通过 USB 转 TTL 模块连接起来。</p>
+<ol>
+<li>
+<p><strong>找到单片机上的 UART 引脚：</strong> 通常在开发板原理图或丝印上会标明 UART1_TX, UART1_RX 等。不同单片机可能叫 USART、SCI 等，但原理类似。</p>
+</li>
+<li>
+<p><strong>准备 USB 转 TTL 模块：</strong> 这是一个小模块，一边是 USB 口插电脑，另一边引出 TXD, RXD, GND, VCC 引脚。</p>
+</li>
+<li>
+<p><strong>连接：</strong></p>
+<ul>
+<li>
+<p>单片机的 <strong>TX</strong> 连接到 USB 转 TTL 模块的 <strong>RXD</strong></p>
+</li>
+<li>
+<p>单片机的 <strong>RX</strong> 连接到 USB 转 TTL 模块的 <strong>TXD</strong></p>
+</li>
+<li>
+<p>单片机的 <strong>GND</strong> 连接到 USB 转 TTL 模块的 <strong>GND</strong></p>
+</li>
+<li>
+<p>（可选）如果模块需要供电，根据情况连接 VCC。</p>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>插入电脑：</strong> 将模块的 USB 口插入电脑。电脑会识别到一个虚拟串口（COM口）。</p>
+</li>
+</ol>
+<p><strong>注意：</strong> 一定要交叉连接 TX 和 RX！GND 必须连接！</p>
+<p>连接好后，你就可以在电脑上<span style="color: #3391E5">使用</span>串口助手软件（如 XCOM、Putty 等）来收发数据了。</p>
+<h3 id="4-3-超时解析法：简单高效的数据接收">4.3 超时解析法：简单高效的数据接收</h3>
+<p>好了，现在硬件连上了，单片机也配置好了 UART（这部分通常由 STM32CubeMX 或类似工具生成初始化代码），数据源源不断地通过 RX 线进来了。但问题是： <strong>我怎么知道一帧完整的数据什么时候结束呢？</strong></p>
+<p>比如，电脑发送了 “Hello” 这个字符串，单片机是一个字节一个字节接收的（‘H’, ‘e’, ‘l’, ‘l’, ‘o’）。单片机怎么知道收到 ‘o’ 之后就表示 “Hello” 发送完了，而不是后面还有其他字符呢？</p>
+<p>这就是数据解析要解决的问题。方法有很多，比如：</p>
+<ul>
+<li>
+<p><strong>固定长度：</strong> 双方约定好每次都发送固定长度的数据，比如每次 10 个字节。收满 10 个字节就算一帧。</p>
+</li>
+<li>
+<p><strong>特定结束符：</strong> 双方约定好用一个特殊的字符或字符串作为结束标志，比如每次发送都以回车换行符 <code>\r\n</code> 结尾。收到这个标志就算一帧结束。</p>
+</li>
+<li>
+<p><strong>超时解析法：</strong> 利用数据传输的间歇时间来判断。如果两个字节之间的时间间隔超过某个阈值（比如 10ms），就认为上一帧数据已经结束了。</p>
+</li>
+</ul>
+<p><strong>超时解析法</strong> 是非常常用的一种方法，尤其适合那些数据长度不固定，且发送方会自然停顿的情况（比如我们通过串口助手手动发送数据）。</p>
+<p><strong>它的核心思想是：</strong></p>
+<ol>
+<li>
+<p>设置一个接收缓冲区（就是一个数组），用来存放收到的字节。</p>
+</li>
+<li>
+<p>启动 UART 接收（通常使用中断方式，每收到一个字节就触发一次中断）。</p>
+</li>
+<li>
+<p>在中断服务函数里：</p>
+<ul>
+<li>
+<p>将收到的字节存入缓冲区。</p>
+</li>
+<li>
+<p>记录当前收到字节的时间（或者说重置一个计时器）。</p>
+</li>
+<li>
+<p>再次启动下一次接收。</p>
+</li>
+</ul>
+</li>
+<li>
+<p>在主循环（或一个定时任务）里，不断检查： <strong>当前时间距离上次收到字节的时间，是否超过了预设的超时时间？</strong></p>
+</li>
+<li>
+<p>如果超过了超时时间，并且缓冲区里有数据，就说明一帧数据接收完毕！可以对缓冲区里的数据进行处理了。处理完后，清空缓冲区，准备接收下一帧。</p>
+</li>
+</ol>
+<p>这种方法非常灵活，不需要知道数据具体长度，也不依赖特殊结束符。接下来，我们就用代码来实现这个逻辑。</p>
+<h3 id="4-4-超时解析实战">4.4 超时解析实战</h3>
+<h4 id="4-4-1-“仓库管理员”：全局变量与常量">4.4.1 “仓库管理员”：全局变量与常量</h4>
+<p>要管理串口接收，首先得有地方存放数据、记录状态。这就像仓库需要货架、计数器和计时器一样。我们定义了以下&quot;管理员&quot;：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-type">uint8_t</span> uart_rx_buffer[UART_RX_BUFFER_SIZE];<br></code></pre></td></tr></table></figure>
+<p><strong>“货架” (缓冲区):</strong> 一个 <code>uint8_t</code> 类型的数组，用于存放串口接收到的每一个字节（货物）。 <code>UART_RX_BUFFER_SIZE</code> (值为 128) 定义了货架的大小，防止货物堆积如山导致溢出。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-type">uint16_t</span> uart_rx_index;<br></code></pre></td></tr></table></figure>
+<p><strong>“计数器”:</strong> 记录当前货架上放了多少件货（收到了多少字节）。当新货到达，计数器加一；当一批货处理完毕，计数器清零。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-type">uint32_t</span> uart_rx_ticks;<br></code></pre></td></tr></table></figure>
+<p><strong>“计时器” (时间戳):</strong> 记录 <strong>最后一件</strong> 货物放到货架上的准确时间。我们用它来判断货物之间的时间间隔。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-keyword">extern</span> <span class="hljs-keyword">volatile</span> <span class="hljs-type">uint32_t</span> uwTick;<br></code></pre></td></tr></table></figure>
+<p><strong>“系统时钟”:</strong> 这是由 STM32HAL库提供的一个全局变量，像一个精准的秒表，每毫秒自动递增。我们用它来获取当前时间，与 <code>uart_rx_ticks</code> 比较。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-meta">#<span class="hljs-keyword">define</span> UART_TIMEOUT_MS 100</span><br></code></pre></td></tr></table></figure>
+<p><strong>“超时规则”:</strong> 定义了一个常量，表示我们能容忍的货物到达的最大时间间隔（100毫秒）。如果超过这个时间没新货来，我们就认为这一批货送完了。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-keyword">extern</span> UART_HandleTypeDef huart1;<br></code></pre></td></tr></table></figure>
+<p><strong>“串口控制器”:</strong> 这是 HAL 库中代表具体串口硬件（如 USART1）的结构体。我们需要通过它来操作串口，比如启动接收、发送数据等。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&quot;stdio.h&quot;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&quot;string.h&quot;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&quot;stdarg.h&quot;</span></span><br>...<br></code></pre></td></tr></table></figure>
+<p><strong>“工具库”:</strong> 引入标准库头文件，提供诸如 <code>memset</code> (清空货架)、<code>vsnprintf</code> (打包打印信息) 等常用工具。</p>
+<p>我们将这些变量定义在函数外部，称为 <strong>全局变量</strong> ，这样在中断处理函数和主任务函数中都可以访问和修改它们，共享状态信息。</p>
+<h4 id="4-4-2-“收货员”：中断回调函数-HAL-UART-RxCpltCallback">4.4.2 “收货员”：中断回调函数 <code>HAL_UART_RxCpltCallback</code></h4>
+<p>当串口硬件接收到一个字节的数据时，它会向CPU发送一个&quot;中断&quot;信号，就像快递员按门铃。CPU 暂停当前工作，转而执行一个特定的函数来处理这个&quot;门铃&quot;<span style="color: #3391E5">事件</span>。在 HAL 库中，这个函数就是 <code>HAL_UART_RxCpltCallback</code> 。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">HAL_UART_RxCpltCallback</span><span class="hljs-params">(UART_HandleTypeDef *huart)</span></span><br><span class="hljs-function"></span>&#123;<br>    <span class="hljs-comment">// 1. 核对身份：是 USART1 的快递员吗？</span><br>	<span class="hljs-keyword">if</span> (huart-&gt;Instance == USART1)<br>	&#123;<br>        <span class="hljs-comment">// 2. 更新收货时间：记录下当前时间</span><br>		uart_rx_ticks = uwTick;<br>        <span class="hljs-comment">// 3. 货物入库：将收到的字节放入缓冲区（HAL库已自动完成）</span><br>        <span class="hljs-comment">//    并增加计数器</span><br>        <span class="hljs-comment">//    (注意：实际入库由 HAL_UART_Receive_IT 触发，这里只更新计数)</span><br>		uart_rx_index++;<br>        <span class="hljs-comment">// 4. 准备下次收货：再次告诉硬件，我还想收一个字节</span><br>		<span class="hljs-built_in">HAL_UART_Receive_IT</span>(&amp;huart1, &amp;uart_rx_buffer[uart_rx_index], <span class="hljs-number">1</span>);<br>	&#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>这个&quot;收货员&quot;的工作流程很简单，但至关重要：</p>
+<ol>
+<li>
+<p><strong>核对身份 ( <code>if</code> 判断):</strong> 确认是目标串口 <code>USART1</code> 发来的中断。</p>
+</li>
+<li>
+<p><strong>更新时间戳 ( <code>uart_rx_ticks = uwTick;</code> ):</strong> 立刻记录下当前收到字节的时间。这是超时判断的基础。</p>
+</li>
+<li>
+<p><strong>更新计数 ( <code>uart_rx_index++;</code> ):</strong> 记录已接收字节数的&quot;计数器&quot;加一。HAL 库在调用这个回调之前，已经默默地把接收到的那个字节放到了 <code>uart_rx_buffer</code> 中 <code>uart_rx_index</code> 指向的位置。</p>
+</li>
+<li>
+<p><strong>“预订下一个包裹” ( <code>HAL_UART_Receive_IT(...)</code> ):</strong> 这是 <strong>精髓</strong> 所在！我们告诉 UART 硬件：“好的，这个字节我收到了，请继续监听，如果再来一个字节，请再次通知我（触发中断），并把它放到缓冲区的下一个位置 (<code>&amp;uart_rx_buffer[uart_rx_index]</code>)”。 <strong>如果不重新启动接收，UART 就只会接收这一个字节，然后就&quot;关门谢客&quot;了。</strong></p>
+</li>
+</ol>
+<p><strong>注意：</strong></p>
+<p><strong>首次&quot;开门&quot;:</strong> 别忘了，第一次接收需要手动启动。通常在 <code>main</code> 函数初始化代码中，调用一次 <code>HAL_UART_Receive_IT(&amp;huart1, &amp;uart_rx_buffer[0], 1);</code> 来等待第一个字节的到来，相当于第一次给门口的传感器通电。</p>
+<h4 id="4-4-3-“理货员”：超时处理任务-uart-task">4.4.3 “理货员”：超时处理任务 <code>uart_task</code></h4>
+<p>“收货员”（中断）只负责快速接收字节并记录时间，它不关心数据是否完整。判断一批货（一帧数据）是否送完，并进行处理的任务，交给了我们的&quot;理货员&quot;—— <code>uart_task</code> 函数。这个函数需要在主循环 <code>while(1)</code> 中不断地被调用。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">uart_task</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span></span><br><span class="hljs-function"></span>&#123;<br>    <span class="hljs-comment">// 1. 检查货架：如果计数器为0，说明没货或刚处理完，休息。</span><br>	<span class="hljs-keyword">if</span> (uart_rx_index == <span class="hljs-number">0</span>)<br>		<span class="hljs-keyword">return</span>;<br> <br>    <span class="hljs-comment">// 2. 检查手表：当前时间 - 最后收货时间 &gt; 规定的超时时间？</span><br>	<span class="hljs-keyword">if</span> (uwTick - uart_rx_ticks &gt; UART_TIMEOUT_MS) <span class="hljs-comment">// 核心判断</span><br>	&#123;<br>        <span class="hljs-comment">// --- 3. 超时！开始理货 --- </span><br>        <span class="hljs-comment">// &quot;uart_rx_buffer&quot; 里从第0个到第 &quot;uart_rx_index - 1&quot; 个</span><br>        <span class="hljs-comment">// 就是我们等到的一整批货（一帧数据）</span><br>		<span class="hljs-built_in">my_printf</span>(&amp;huart1, <span class="hljs-string">&quot;uart data: %s\n&quot;</span>, uart_rx_buffer);<br>        <span class="hljs-comment">// (在这里加入你自己的处理逻辑，比如解析命令控制LED)</span><br>        <span class="hljs-comment">// --- 理货结束 --- </span><br> <br>		<span class="hljs-comment">// 4. 清理现场：把处理完的货从货架上拿走，计数器归零</span><br>		<span class="hljs-built_in">memset</span>(uart_rx_buffer, <span class="hljs-number">0</span>, uart_rx_index);<br>		uart_rx_index = <span class="hljs-number">0</span>;<br> <br>        <span class="hljs-comment">// 5. 将UART接收缓冲区指针重置为接收缓冲区的起始位置</span><br>        huart<span class="hljs-number">1.</span>pRxBuffPtr = uart_rx_buffer;<br>	&#125;<br>    <span class="hljs-comment">// 如果没超时，啥也不做，等下次再检查</span><br>&#125;<br></code></pre></td></tr></table></figure>
+<p>&quot;理货员&quot;的逻辑清晰：</p>
+<ol>
+<li>
+<p><strong>检查是否有货 ( <code>if (uart_rx_index == 0)</code> ):</strong> 如果缓冲区是空的 (<code>uart_rx_index</code> 是 0)，说明没有待处理的数据，直接返回，不浪费时间。</p>
+</li>
+<li>
+<p><strong>判断是否超时 ( <code>if (uwTick - uart_rx_ticks &gt; UART_TIMEOUT_MS)</code> ):</strong> 这是超时法的核心！用当前系统时间 <code>uwTick</code> 减去最后一次收到字节的时间 <code>uart_rx_ticks</code>，得到时间差。如果这个差值大于我们设定的 <code>UART_TIMEOUT_MS</code>（100毫秒），就意味着在100毫秒内没有新的字节到来。</p>
+</li>
+<li>
+<p><strong>处理数据 (超时后的代码块):</strong> 一旦超时条件满足，我们就认为 <code>uart_rx_buffer</code> 中从第 0 个元素到第 <code>uart_rx_index - 1</code> 个元素构成了一帧完整的数据。代码中简单地用 <code>my_printf</code> 将数据显示出来。 <strong>这是你需要根据实际应用替换成自己数据处理逻辑的地方</strong> ，比如解析 JSON、执行命令等。</p>
+</li>
+<li>
+<p><strong>清空状态 ( <code>memset(...)</code> 和 <code>uart_rx_index = 0;</code> ):</strong> 数据处理完毕后，必须清理现场！使用 <code>memset</code> 将缓冲区内容清零（好习惯），并将 <code>uart_rx_index</code> 置 0，表示货架空了，可以接收下一批新货了。</p>
+</li>
+</ol>
+<p><strong>关于 <code>uwTick</code> 回卷：</strong> <code>uwTick</code> 是一个 32 位无符号整数，它会一直增加，最终会溢出回零。但是， <code>(uint32_t)currentTime - (uint32_t)lastTime</code> 这种计算方式在 C 语言中能正确处理回卷（只要两次时间差不超过 <code>uint32_t</code> 最大值的一半，对于毫秒计时这几乎不可能发生），所以直接相减是安全的。</p>
+<p><strong>重要修正：关于注释掉的 <code>huart1.pRxBuffPtr = ...</code>：</strong> 原始代码注释中认为在简单中断场景下此行可选，但经过实践验证， <strong>在此实现中，这行代码是必需的！</strong> 如果注释掉 <code>huart1.pRxBuffPtr = uart_rx_buffer;</code> 这一行，很可能会导致接收指针混乱，引发不可预期的错误。具体原因涉及到 HAL 库内部状态管理，我们将在 <strong>下节课开头</strong> 进行详细的 Debug 演示来深入剖析这个问题。 <strong>请务必保留这行代码！</strong></p>
+<h4 id="4-4-4-“广播员”：非常通用的辅助函数-my-printf">4.4.4 “广播员”：非常通用的辅助函数 <code>my_printf</code></h4>
+<p>为了方便我们在开发过程中查看接收到的数据或打印调试信息，代码提供了一个 <code>my_printf</code> 函数，它能像标准 <code>printf</code> 一样工作，但输出目标是 UART 串口。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">my_printf</span><span class="hljs-params">(UART_HandleTypeDef *huart, <span class="hljs-type">const</span> <span class="hljs-type">char</span> *format, ...)</span></span><br><span class="hljs-function"></span>&#123;<br>	<span class="hljs-type">char</span> buffer[<span class="hljs-number">512</span>]; <span class="hljs-comment">// 临时存储格式化后的字符串</span><br>	va_list arg;      <span class="hljs-comment">// 处理可变参数</span><br>	<span class="hljs-type">int</span> len;          <span class="hljs-comment">// 最终字符串长度</span><br> <br>	<span class="hljs-built_in">va_start</span>(arg, format);<br>	<span class="hljs-comment">// 安全地格式化字符串到 buffer</span><br>	len = <span class="hljs-built_in">vsnprintf</span>(buffer, <span class="hljs-built_in">sizeof</span>(buffer), format, arg);<br>	<span class="hljs-built_in">va_end</span>(arg);<br> <br>	<span class="hljs-comment">// 通过 HAL 库发送 buffer 中的内容</span><br>	<span class="hljs-built_in">HAL_UART_Transmit</span>(huart, (<span class="hljs-type">uint8_t</span> *)buffer, (<span class="hljs-type">uint16_t</span>)len, <span class="hljs-number">0xFF</span>);<br>	<span class="hljs-keyword">return</span> len;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>它通过以下步骤工作：</p>
+<ul>
+<li>
+<p>使用 C 语言的 <code>stdarg.h</code> 库处理不定数量的参数（就像 <code>printf</code> 可以接受不同数量和类型的参数一样）。</p>
+</li>
+<li>
+<p>调用 <code>vsnprintf</code>，这是一个安全的函数，它会将格式字符串 (<code>format</code>) 和后续参数组合成最终的字符串，并存入 <code>buffer</code> 中，同时防止缓冲区溢出。</p>
+</li>
+<li>
+<p>最后调用 <code>HAL_UART_Transmit</code> 函数，将 <code>buffer</code> 中的内容通过指定的 <code>huart</code> (比如 <code>&amp;huart1</code>) 发送出去。<code>0xFF</code> 是发送超时时间（这里设为一个相对宽松的值）。</p>
+</li>
+</ul>
+<p>这个函数非常适合在 <code>uart_task</code> 中打印接收到的数据，或者在代码其他地方输出调试日志。</p>
+<h3 id="4-5-DMA与空闲中断解析法">4.5 DMA与空闲中断解析法</h3>
+<p>超时解析法简单易懂，但在数据量较大或速率较高时，频繁进入中断处理每个字节会消耗不少 CPU 资源。为了解放 CPU，让它专注于更重要的任务，我们可以请出两位强大的帮手： <strong>DMA</strong> 和 <strong>UART 空闲中断</strong> 。</p>
+<p>这种方法的核心思想是：</p>
+<ul>
+<li>
+<p><strong>DMA (Direct Memory Access):</strong> 像一个专业的&quot;搬运工&quot;，可以在不需要 CPU 干预的情况下，直接将串口硬件接收到的数据搬运到内存缓冲区。<br>
+<strong>想象一下：</strong> CPU 是个大忙人（老板），内存是仓库，串口硬件是收货口。没有 DMA 时，每来一个包裹（字节），都得老板亲自去收货口取货，再放到仓库里，老板累得够呛。有了 DMA 这个&quot;专业搬运工&quot;，老板只需要告诉搬运工：“你去收货口守着，有货来了直接搬到仓库的这个区域，搬满/对方不送了再告诉我。” 之后老板就可以专心处理其他事务了。</p>
+</li>
+<li>
+<p><strong>UART 空闲中断 (Idle Line Detection):</strong> 串口硬件能检测到总线上是否出现了一段持续的高电平（空闲状态），这通常标志着一次数据传输（一个数据包或一帧）的结束。当检测到空闲状态时，触发一个中断。</p>
+</li>
+</ul>
+<p>结合起来，流程就变成了：CPU 告诉 DMA “开始搬运”，然后就去忙别的了。DMA 默默地把串口收到的数据搬到内存。当发送方停止发送，总线出现空闲时，硬件触发空闲中断，通知 CPU：“嘿，刚才那波数据传输结束了，DMA 已经把数据都搬到内存的这个位置了，总共搬了这么多字节，你快去处理吧！”</p>
+<p>这样，CPU 只在一次数据传输（可能包含很多字节）结束后才需要介入一次，大大提高了效率。</p>
+<p>DMA在CubeMax中的参数解析</p>
+ <img src="./assets/0_1.png" srcset="/img/loading.gif" lazyload alt="" style="max-height:172px; box-sizing:content-box;" />
+<p><strong>DMA Request（DMA 请求源）</strong></p>
+<ul>
+<li>
+<p>意思：你要让 DMA 帮 <strong>哪个外设</strong> 干活。比如这里选 “USART1_RX”，就是 “帮串口 1 的接收模块搬运数据”。</p>
+</li>
+<li>
+<p>意义：告诉 DMA “你的服务对象是谁”，不同外设（串口、ADC、SPI 等）都有对应的 DMA 请求选项。</p>
+</li>
+</ul>
+<p><strong>Stream（DMA 流）</strong></p>
+<ul>
+<li>
+<p>意思：DMA 的 “硬件通道”。STM32 的 DMA（比如 DMA2）有多个 Stream（流），每个流可以绑定不同的外设请求。</p>
+</li>
+<li>
+<p>意义：相当于给 DMA 分配 “专属车道”—— 多个外设同时用 DMA 时，不同流可以并行工作，避免抢资源。</p>
+</li>
+</ul>
+<p><strong>Direction（数据方向）</strong></p>
+<ul>
+<li>
+<p>意思：数据 “从哪搬到哪”。这里 “Peripheral To Memory” 是 “外设→内存”：比如串口接收时，数据从串口（外设）传到单片机的 RAM（内存）。还有另外两种方向：</p>
+<ul>
+<li>
+<p>Memory To Peripheral：内存→外设（比如串口发送，把内存里的数据传到串口）</p>
+</li>
+<li>
+<p>Memory To Memory：内存→内存（比如 RAM 里的数据复制）</p>
+</li>
+</ul>
+</li>
+<li>
+<p>意义：确定数据的搬运路径，不能搞反。</p>
+</li>
+</ul>
+<p><strong>Priority（优先级）</strong></p>
+<ul>
+<li>
+<p>意思：多个 DMA 任务同时来的时候，谁先执行。这里是 “Low（低）”，还有 Medium（中）、High（高）、Very High（极高）等级。</p>
+</li>
+<li>
+<p>意义：当多个外设同时让 DMA 干活时，优先级高的任务会被优先处理，避免混乱。</p>
+</li>
+</ul>
+ <img src="./assets/0_2.png" srcset="/img/loading.gif" lazyload alt="" style="max-height:234px; box-sizing:content-box;" />
+<p><strong>Mode（传输模式）</strong></p>
+<ul>
+<li>
+<p>意思：当前选的是 “Normal（正常模式）”——DMA 只完成 <strong>一次搬运任务</strong> 就停下来，比如只接收一段固定长度的数据。还有另一种常用模式：“Circular（循环模式）”—— 搬完一轮后自动重新开始，适合 <strong>持续不断的传输</strong> （比如串口一直接收数据）。</p>
+</li>
+<li>
+<p>意义：决定 DMA 是 “一次性干活” 还是 “循环反复干活”。</p>
+</li>
+</ul>
+<p><strong>Increment Address（地址增量）</strong></p>
+<ul>
+<li>
+<p>分为 “Peripheral（外设）” 和 “Memory（内存）” 两个选项：</p>
+</li>
+<li>
+<p><strong>Peripheral Increment Address (外设地址增量)</strong></p>
+<ul>
+<li>
+<p>这个选项决定了 <strong>外设</strong> 的地址在每次数据传输后是否需要改变。</p>
+</li>
+<li>
+<p><strong>不勾选 (Disabled): 固定的 “收货窗口”</strong></p>
+<ul>
+<li>
+<p><strong>含义</strong> : 外设的地址是固定的。就像快递员每次都从 <strong>同一个窗口</strong> （比如 “1 号窗口”）取包裹。</p>
+</li>
+<li>
+<p><strong>场景</strong> : 这是最常见的情况。很多外设只有一个数据寄存器。例如，串口（USART）的接收 / 发送数据寄存器（ <code>DR</code> ）就只有一个地址。每次有新数据，都会出现在这个地址上，所以 DMA 只需要反复访问这一个地址即可。</p>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>勾选 (Enabled): 移动的 “收货窗口”</strong></p>
+<ul>
+<li>
+<p><strong>含义</strong> : 外设的地址在每次传输后会自动增加。就像快递员从 “1 号窗口” 取完一个包裹后，自动走到 “2 号窗口” 取下一个。</p>
+</li>
+<li>
+<p><strong>场景</strong> : 这种情况相对少见，通常用于那些拥有内部 FIFO（先进先出队列）或数据寄存器阵列的外设。例如，某些型号的 ADC（模数转换器）在扫描多个通道时，可以将结果存放在一个内部的 FIFO 中，DMA 可以通过递增地址的方式连续读取这些结果。</p>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>Memory Increment Address (内存地址增量)</strong></p>
+</li>
+<li>
+<p>这个选项决定了 <strong>内存</strong> 的地址在每次数据传输后是否需要改变。</p>
+</li>
+<li>
+<p><strong>不勾选 (Disabled): 固定的 “卸货点”</strong></p>
+<ul>
+<li>
+<p><strong>含义</strong> : 内存的地址是固定的。就像快递员每次都把包裹放在 <strong>同一个位置</strong> （比如 “家门口的红色箱子”）。</p>
+</li>
+<li>
+<p><strong>场景</strong> : 这种模式用于需要 <strong>持续刷新</strong> 某个内存变量的场景。例如，一个温度传感器的数据需要被实时显示在屏幕上。我们不需要保存历史数据，只需要知道最新的温度值。DMA 可以不断地将新的温度数据写入同一个内存地址，覆盖掉旧的数据。</p>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>勾选 (Enabled): 连续的 “卸货点”</strong></p>
+<ul>
+<li>
+<p><strong>含义</strong> : 内存的地址在每次传输后会自动增加。就像快递员把包裹一个接一个地 <strong>排成一列</strong> 放在地上（第一个在 0x20000000，第二个在 0x20000001，以此类推）。</p>
+</li>
+<li>
+<p><strong>场景</strong> : 这是最常见的情况，用于 <strong>数据采集和存储</strong> 。例如，通过 ADC 连续采集电压信号，并将数据存储在内存的一个数组中，以便后续进行分析或处理。</p>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p>意义：让数据 “按顺序存”，避免乱序或覆盖。</p>
+</li>
+</ul>
+<p><strong>Use Fifo &amp; Threshold（FIFO 缓存）</strong></p>
+<ul>
+<li>
+<p>Use Fifo：勾选后，DMA 会先把数据存到自己的 “小缓存（FIFO）” 里，攒够一定量再搬运；不勾选的话，数据 “直接传输”（一个传一个）。</p>
+</li>
+<li>
+<p>Threshold：FIFO 的 “触发阈值”（比如 “半满”“全满”），只有勾选 Use Fifo 后才会生效。</p>
+</li>
+<li>
+<p>意义：FIFO 可以减少频繁的内存访问，提升传输效率（类似快递员先把快递攒一筐，再一次性送，而不是拿一个送一个）。</p>
+</li>
+</ul>
+<p><strong>Data Width（数据宽度）</strong></p>
+<ul>
+<li>
+<p>外设和内存都选了 “Byte（字节，8 位）”：表示 <strong>每次搬运 1 个字节</strong> 的数据。还有另外两个选项：</p>
+<ul>
+<li>
+<p>Half-Word（半字，16 位）：一次搬 2 字节</p>
+</li>
+<li>
+<p>Word（字，32 位）：一次搬 4 字节</p>
+</li>
+</ul>
+</li>
+<li>
+<p>意义：必须和 <strong>外设的传输宽度匹配</strong> （比如串口是按字节传输的，所以选 Byte；如果是 ADC 按 16 位输出，就选 Half-Word），否则会传错数据。</p>
+</li>
+</ul>
+<p><strong>Burst Size（突发传输大小）</strong></p>
+<ul>
+<li>
+<p>意思：一次 “批量搬运” 的数量（比如 1 个、4 个、8 个数据），当前是空的表示 “单次传输”。</p>
+</li>
+<li>
+<p>意义：适合 <strong>批量传输场景</strong> （比如一次性搬多个数据，减少 DMA 的启动次数）。</p>
+</li>
+</ul>
+<h4 id="4-5-1-全局变量与-DMA-配置">4.5.1 全局变量与 DMA 配置</h4>
+<p>要使用 DMA + 空闲中断，我们的&quot;仓库&quot;也需要升级：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-type">uint8_t</span> uart_rx_dma_buffer[UART_RX_DMA_BUFFER_SIZE];<br></code></pre></td></tr></table></figure>
+<p><strong>“DMA 专用卸货区”:</strong> 这是 DMA 控制器直接操作的内存区域。串口硬件接收到的数据会被 DMA &quot;搬运工&quot;直接放到这里。其大小 <code>UART_RX_DMA_BUFFER_SIZE</code> 需要足够容纳预期中一次传输的最大数据量（或者可以设置为一个合理的值，配合空闲中断使用）。<br>
+<strong>类比：</strong> 这就像是给&quot;搬运工&quot;指定了一个临时的、专属的货物堆放场地。收货口的货来了，搬运工就往这个场地上堆，不需要老板（CPU）插手。场地的大小决定了一次最多能连续堆放多少货。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-type">uint8_t</span> uart_dma_buffer[UART_DMA_BUFFER_SIZE];<br></code></pre></td></tr></table></figure>
+<p><strong>“待处理货架”:</strong> 当空闲中断发生时，我们会将 DMA 卸货区 (<code>uart_rx_dma_buffer</code>) 的数据 <strong>复制</strong> 到这个缓冲区进行处理。这样做是为了尽快让 DMA 可以继续接收下一批数据，避免数据丢失。其大小通常与 DMA 缓冲区相同。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-keyword">volatile</span> <span class="hljs-type">uint8_t</span> uart_flag = <span class="hljs-number">0</span>;<br></code></pre></td></tr></table></figure>
+<p><strong>“到货通知旗”:</strong> 一个标志位。当空闲中断发生，表示一批数据接收完成并且已经从 DMA 区复制到待处理货架后，我们会把这个旗子举起来 (<code>uart_flag = 1;</code>)。主循环中的处理任务看到旗子举起来了，就知道有新货到了，可以开始处理。</p>
+<p><strong>CubeMX 配置是关键:</strong> 要使用 DMA 和空闲中断，必须在 STM32CubeMX 中：</p>
+<ul>
+<li>
+<p>为对应的 UART RX 添加 DMA 请求 (通常设置为 Circular 模式，这样 DMA 缓冲区满了会自动回到开头继续写入，但配合空闲中断，Normal 模式更常见)。</p>
+</li>
+<li>
+<p>使能 UART 的全局中断。</p>
+</li>
+<li>
+<p>(部分芯片/库版本可能需要额外配置使能 IDLE Line 事件中断)。</p>
+</li>
+</ul>
+<p>CubeMX 会自动生成 DMA 和 UART 的初始化代码，包括关联 DMA 句柄 (如 <code>hdma_usart1_rx</code>)。</p>
+<h4 id="4-5-2-启动-DMA-接收">4.5.2 启动 DMA 接收</h4>
+<p>在所有初始化完成之后（通常在 <code>main</code> 函数的初始化代码段末尾），我们需要调用一个函数来启动第一次 DMA 接收，并告诉系统我们关心空闲中断：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-function">HAL_StatusTypeDef <span class="hljs-title">HAL_UARTEx_ReceiveToIdle_DMA</span><span class="hljs-params">(UART_HandleTypeDef *huart, <span class="hljs-type">uint8_t</span> *pData, <span class="hljs-type">uint16_t</span> Size)</span></span>;<br></code></pre></td></tr></table></figure>
+<p>这个函数就像是对 DMA 搬运工和串口硬件下达指令：“开始工作！请使用 DMA 通道（已在 CubeMX 配置好），将串口 <code>huart</code> 收到的数据，持续搬运到内存地址 <code>pData</code> (<code>uart_rx_dma_buffer</code>) 开始的地方，最多搬运 <code>Size</code> (<code>sizeof(uart_rx_dma_buffer)</code>) 个字节。同时，请留意串口总线上的空闲状态，一旦检测到空闲（表示对方可能发完了一帧），或者 DMA 缓冲区满了，就触发相应的事件通知我。”</p>
+<p><strong>Receive To Idle:</strong> 这个函数名明确表示了它的意图——接收数据，直到检测到总线空闲。它内部会自动处理 DMA 的配置和启动，并确保相关的 UART 中断（特别是 IDLE 中断）被使能。</p>
+<p>有时，我们可能不关心 DMA 的&quot;半满&quot;中断（Half Transfer Complete），因为它对于判断一帧结束没有帮助，反而可能干扰空闲中断的处理逻辑。因此，可能会看到这样的代码紧随其后：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs cpp">__HAL_DMA_DISABLE_IT(&amp;hdma_usart1_rx, DMA_IT_HT);<br></code></pre></td></tr></table></figure>
+<p>这行代码的作用是明确地关闭 DMA 的&quot;半满中断&quot;功能。<code>hdma_usart1_rx</code> 是 CubeMX 为 USART1 RX 通道生成的 DMA 句柄。</p>
+<p>一旦调用了 <code>HAL_UARTEx_ReceiveToIdle_DMA</code> ，CPU 就可以撒手不管数据的字节级接收了，直到中断发生。</p>
+ <img src="./assets/0_3.png" srcset="/img/loading.gif" lazyload alt="" style="max-height:578px; box-sizing:content-box;" />
+<h4 id="4-5-3-DMA的中断处理函数：-HAL-UARTEx-RxEventCallback">4.5.3 DMA的中断处理函数： <code>HAL_UARTEx_RxEventCallback</code></h4>
+<p><strong>中断角色的转变：</strong> 在纯中断接收（或超时解析）方法中，UART 中断几乎是为每个字节服务的。但在 DMA + 空闲中断模式下，UART 中断的角色发生了根本性转变！它不再关心单个字节的到达（因为这由 DMA 在后台处理了），而是主要关注一个更宏观的事件： <strong>一帧数据传输的结束</strong> ，这个结束的标志就是我们接下来要讲的&quot;总线空闲&quot;。</p>
+<p>当 UART 检测到总线空闲（IDLE 事件），或者 DMA 传输达到预期的一半/全部（如果使能了 HT/TC 中断）时，会触发 UART 的全局中断。HAL 库的中断处理程序在识别到是这些事件后，会调用这个 <strong>扩展回调函数</strong> ：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * @brief UART DMA接收完成或空闲事件回调函数</span><br><span class="hljs-comment"> * @param huart UART句柄</span><br><span class="hljs-comment"> * @param Size 指示在事件发生前，DMA已经成功接收了多少字节的数据</span><br><span class="hljs-comment"> * @retval None</span><br><span class="hljs-comment"> */</span><br><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">HAL_UARTEx_RxEventCallback</span><span class="hljs-params">(UART_HandleTypeDef *huart, <span class="hljs-type">uint16_t</span> Size)</span></span><br><span class="hljs-function"></span>&#123;<br>    <span class="hljs-comment">// 1. 确认是目标串口 (USART1)</span><br>    <span class="hljs-keyword">if</span> (huart-&gt;Instance == USART1)<br>    &#123;<br>        <span class="hljs-comment">// 2. 紧急停止当前的 DMA 传输 (如果还在进行中)</span><br>        <span class="hljs-comment">//    因为空闲中断意味着发送方已经停止，防止 DMA 继续等待或出错</span><br>        <span class="hljs-built_in">HAL_UART_DMAStop</span>(huart);<br> <br>        <span class="hljs-comment">// 3. 将 DMA 缓冲区中有效的数据 (Size 个字节) 复制到待处理缓冲区</span><br>        <span class="hljs-built_in">memcpy</span>(uart_dma_buffer, uart_rx_dma_buffer, Size); <br>        <span class="hljs-comment">// 注意：这里使用了 Size，只复制实际接收到的数据</span><br>        <br>        <span class="hljs-comment">// 4. 举起&quot;到货通知旗&quot;，告诉主循环有数据待处理</span><br>        uart_flag = <span class="hljs-number">1</span>;<br> <br>        <span class="hljs-comment">// 5. 清空 DMA 接收缓冲区，为下次接收做准备</span><br>        <span class="hljs-comment">//    虽然 memcpy 只复制了 Size 个，但清空整个缓冲区更保险</span><br>        <span class="hljs-built_in">memset</span>(uart_rx_dma_buffer, <span class="hljs-number">0</span>, <span class="hljs-built_in">sizeof</span>(uart_rx_dma_buffer));<br> <br>        <span class="hljs-comment">// 6. **关键：重新启动下一次 DMA 空闲接收**</span><br>        <span class="hljs-comment">//    必须再次调用，否则只会接收这一次</span><br>        <span class="hljs-built_in">HAL_UARTEx_ReceiveToIdle_DMA</span>(&amp;huart1, uart_rx_dma_buffer, <span class="hljs-built_in">sizeof</span>(uart_rx_dma_buffer));<br>        <br>        <span class="hljs-comment">// 7. 如果之前关闭了半满中断，可能需要在这里再次关闭 (根据需要)</span><br>        <span class="hljs-comment">// __HAL_DMA_DISABLE_IT(&amp;hdma_usart1_rx, DMA_IT_HT);</span><br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>这个回调函数是 DMA+空闲中断方法的核心枢纽：</p>
+<ol>
+<li>
+<p><strong>确认身份 ( <code>if</code> 判断):</strong> 检查是否是目标串口触发的事件。</p>
+</li>
+<li>
+<p><strong>停止 DMA ( <code>HAL_UART_DMAStop</code> ):</strong> 空闲事件发生时，明确停止当前的 DMA 传输。这很重要，因为 DMA 可能还在等待更多数据（如果设置的 Size 比较大）。</p>
+</li>
+<li>
+<p><strong>复制数据 ( <code>memcpy</code> ):</strong> 将 DMA 缓冲区 (<code>uart_rx_dma_buffer</code>) 中 <strong>实际接收到的 <code>Size</code> 个字节</strong> 复制到我们的应用缓冲区 (<code>uart_dma_buffer</code>)。 <strong><code>Size</code> 参数非常关键</strong> ，它告诉我们这次空闲事件发生前，DMA 到底接收了多少数据。</p>
+</li>
+<li>
+<p><strong>设置标志 ( <code>uart_flag = 1;</code> ):</strong> 通知主循环中的处理任务。</p>
+</li>
+<li>
+<p><strong>清空 DMA 缓冲区 ( <code>memset</code> ):</strong> 为下一次接收做好准备。</p>
+</li>
+<li>
+<p><strong>重新启动接收 ( <code>HAL_UARTEx_ReceiveToIdle_DMA</code> ):</strong> <strong>极其重要！</strong> 必须重新调用此函数，才能接收下一次的数据传输。</p>
+</li>
+<li>
+<p><strong>(可选) 禁用半满中断:</strong> 如果在初始化时禁用了，通常在重新启动后也需要再次禁用。</p>
+</li>
+</ol>
+<p><strong>关于 <code>Size</code> 参数：</strong> 在空闲中断场景下， <code>Size</code> 表示从上次启动 <code>ReceiveToIdle_DMA</code> 到本次空闲中断发生之间，DMA 实际接收到的字节数。它可能小于你启动时设置的 DMA 缓冲区总大小。所以 <code>memcpy</code> 时必须使用 <code>Size</code> 作为长度，而不是 <code>sizeof(uart_rx_dma_buffer)</code>，否则会复制无效数据。</p>
+<h4 id="4-5-4-主循环任务-uart-proc">4.5.4 主循环任务 <code>uart_proc</code></h4>
+<p>当回调函数举起 <code>uart_flag</code> 后，主循环中运行的处理任务（或定时器任务）就可以来处理这批数据了：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * @brief  处理 DMA 接收到的 UART 数据</span><br><span class="hljs-comment"> * @param  None</span><br><span class="hljs-comment"> * @retval None</span><br><span class="hljs-comment"> */</span><br><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">uart_proc</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span></span><br><span class="hljs-function"></span>&#123;<br>    <span class="hljs-comment">// 1. 检查&quot;到货通知旗&quot;</span><br>    <span class="hljs-keyword">if</span>(uart_flag == <span class="hljs-number">0</span>) <br>        <span class="hljs-keyword">return</span>; <span class="hljs-comment">// 旗子没举起来，说明没新货，直接返回</span><br>    <br>    <span class="hljs-comment">// 2. 放下旗子，表示我们已经注意到新货了</span><br>    <span class="hljs-comment">//    防止重复处理同一批数据</span><br>    uart_flag = <span class="hljs-number">0</span>;<br>	<br>    <span class="hljs-comment">// 3. 处理 &quot;待处理货架&quot; (uart_dma_buffer) 中的数据</span><br>    <span class="hljs-comment">//    这里简单地打印出来，实际应用中会进行解析、执行命令等</span><br>    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;DMA data: %s\n&quot;</span>, uart_dma_buffer);<br>    <span class="hljs-comment">//    (注意：如果数据不是字符串，需要用其他方式处理，比如按字节解析)</span><br>    <br>    <span class="hljs-comment">// 4. 清空&quot;待处理货架&quot;，为下次接收做准备</span><br>    <span class="hljs-built_in">memset</span>(uart_dma_buffer, <span class="hljs-number">0</span>, <span class="hljs-built_in">sizeof</span>(uart_dma_buffer));<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>这个处理任务的逻辑很简单：</p>
+<ol>
+<li>
+<p>检查标志位 <code>uart_flag</code>。</p>
+</li>
+<li>
+<p>如果标志位为 1，则将其清零，防止重复处理。</p>
+</li>
+<li>
+<p>处理 <code>uart_dma_buffer</code> 中的数据（这里是打印）。</p>
+</li>
+<li>
+<p>清空 <code>uart_dma_buffer</code>。</p>
+</li>
+</ol>
+<p>通过这种方式，数据接收（DMA + 中断回调）和数据处理（主循环任务）实现了分离，CPU 仅在每帧数据结束时被短暂占用，处理任务则可以在 CPU 空闲时执行。</p>
+<h3 id="数据流转枢纽：深入环形缓冲区-RingBuffer">数据流转枢纽：深入环形缓冲区 (RingBuffer)</h3>
+<p>前面的例子中，我们使用了简单的线性数组作为接收缓冲区。当数据量不大或处理及时的情况下，这种方式是可行的。但如果数据产生速度快于处理速度，或者我们需要更灵活地处理数据流，线性缓冲区很快就会遇到瓶颈（比如频繁的数据搬移或溢出）。这时， <strong>环形缓冲区 (Ring Buffer)</strong> 闪亮登场，它是一种非常高效且常用的数据结构，尤其适用于处理像 UART 这样的串行数据流。</p>
+<h3 id="4-6-环形缓冲区">4.6 环形缓冲区</h3>
+<h4 id="4-6-1-什么是环形缓冲区？">4.6.1 什么是环形缓冲区？</h4>
+<p>想象一条固定长度的传送带，货物（数据）从一端放上，从另一端取下。当传送带转到底时，又会绕回到开头。环形缓冲区就类似这个概念：</p>
+<ul>
+<li>
+<p>它使用一段 <strong>固定大小的连续内存</strong> （就像一个普通数组）。</p>
+</li>
+<li>
+<p>它维护两个关键的指针（或索引）：一个指向下一个 <strong>可读</strong> 数据的位置（“读指针” <code>read_index</code> ），另一个指向下一个 <strong>可写</strong> 的位置（“写指针” <code>write_index</code> ）。</p>
+</li>
+<li>
+<p>当数据被写入缓冲区时，写指针向前移动；当数据被读取时，读指针向前移动。</p>
+</li>
+<li>
+<p>关键在于&quot;环形&quot;：当指针移动到缓冲区的末尾时，它会自动 <strong>“回绕”</strong> 到缓冲区的开头，继续移动。这使得缓冲区看起来像一个首尾相连的环。</p>
+</li>
+</ul>
+<p>环形缓冲区示意图</p>
+ <img src="./assets/0_4.png" srcset="/img/loading.gif" lazyload alt="" style="max-height:448px; box-sizing:content-box;" />
+<h4 id="4-6-2-工作原理：读写指针与状态判断">4.6.2 工作原理：读写指针与状态判断</h4>
+<p>环形缓冲区的精髓在于如何管理读写指针以及判断缓冲区的状态（空、满、或部分填充）。基本操作如下：</p>
+<p>✍️写入数据 (Producer):</p>
+<p>当有新数据需要存入时，生产者（比如 UART 中断服务程序）检查缓冲区是否 <strong>未满</strong> 。如果未满，就将数据放入写指针 <code>write_index</code> 指向的位置，然后将 <code>write_index</code> 向前移动一位（如果到达末尾则回绕到开头）。</p>
+<p>📖读取数据 (Consumer):</p>
+<p>当需要取出数据时，消费者（比如主循环中的处理任务）检查缓冲区是否 <strong>非空</strong> 。如果不为空，就从读指针 <code>read_index</code> 指向的位置取出数据，然后将 <code>read_index</code> 向前移动一位（同样，到达末尾则回绕）。</p>
+<p>⚪空状态判断:</p>
+<p>通常，当 <code>read_index</code> 等于 <code>write_index</code> 时，表示缓冲区为空。（具体需结合满状态判断方法）</p>
+<hr>
+<h5 id="❓-满状态判断的挑战与策略">❓ 满状态判断的挑战与策略</h5>
+<p>棘手之处在于：如果仅用 <code>read_index == write_index</code> 判断空，那么当缓冲区刚好写满时，写指针回绕后也会等于读指针，导致空满状态混淆。常见解决方法有：</p>
+<p><strong>方法一：牺牲存储单元</strong></p>
+<p>有意保留一个单元不使用。当写指针的下一个位置是读指针时，即认为已满。 <code>read_index == write_index</code> 明确表示空。</p>
+<p><strong>优点：</strong> 逻辑简单直观。<br>
+<strong>缺点：</strong> 浪费一个存储单元。</p>
+<p><strong>方法二：额外计数器</strong></p>
+<p>维护一个变量记录有效数据数量。写入时+1，读取时-1。通过计数器判断空(0)或满(size)。</p>
+<p><strong>优点：</strong> 不浪费空间。<br>
+<strong>缺点：</strong> 需要额外变量，并发操作计数器可能需加锁。</p>
+<p><strong>⭐方法三：镜像指示位 (Mirror Bit - 本代码库实现)</strong></p>
+<p>为读写索引各分配一个&quot;镜像位&quot;（<code>read_mirror</code>, <code>write_mirror</code>）。每次指针 <strong>越过</strong> 缓冲区末尾（回绕）时，翻转其镜像位。</p>
+<ul>
+<li>
+<p><strong>空:</strong> <code>read_index == write_index</code> <strong>且</strong> <code>read_mirror == write_mirror</code></p>
+</li>
+<li>
+<p><strong>满:</strong> <code>read_index == write_index</code> <strong>但</strong> <code>read_mirror != write_mirror</code></p>
+</li>
+</ul>
+<p><strong>优点：</strong> 不浪费空间，无需额外计数器，状态判断精确。<br>
+<strong>缺点：</strong> 索引位数减少（本例中为15位，限制容量为32KB），逻辑稍复杂。</p>
+<hr>
+<h4 id="4-6-3-环形缓冲区的优势">4.6.3 环形缓冲区的优势</h4>
+<p>相比简单的线性数组，环形缓冲区在处理流式数据时具有显著优势：</p>
+<ul>
+<li>
+<p><strong>高效的内存利用：</strong> 空间固定，重复使用，避免了动态内存分配的开销和碎片问题。</p>
+</li>
+<li>
+<p><strong>无需数据搬移：</strong> 线性数组在读取数据后，如果要保持后续数据连续，通常需要将后面的数据向前移动，这非常耗时。环形缓冲区通过移动读指针即可，无需搬移数据本身。</p>
+</li>
+<li>
+<p><strong>天然解耦生产者和消费者：</strong> 生产者（如中断）只管往缓冲区里写，消费者（如主任务）只管从缓冲区里读。只要缓冲区没满或没空，两者可以异步地以不同的速率工作，起到了很好的缓冲和削峰填谷的作用。这对于处理速率不匹配或有突发数据的情况（如 UART 通信）非常有益。</p>
+</li>
+<li>
+<p><strong>线程安全（需注意）：</strong> 环形缓冲区本身提供了解耦机制，但在多线程或中断环境中使用时，仍需对 <strong>指针操作</strong> 进行保护（例如，关中断、使用原子操作或锁），以防止读写指针在并发访问时出错。不过，单生产者单消费者模型通常可以设计成无锁（lock-free）的，效率很高。</p>
+</li>
+</ul>
+<h3 id="4-7-深入-HAL-库-API：幕后英雄们">4.7 深入 HAL 库 API：幕后英雄们</h3>
+<p>之前的代码讲解展示了超时解析的逻辑，但具体和硬件打交道的部分，我们依赖了 STM32 HAL 库提供的 API（应用程序接口）。理解这些 API 的工作方式，就像了解话剧表演中每个演员的角色和台词，能帮助我们更深入地掌握整个流程。让我们来认识一下这几位&quot;幕后英雄&quot;吧！</p>
+<h4 id="4-7-1-“预订下一个包裹”：-HAL-UART-Receive-IT">4.7.1 “预订下一个包裹”： <code>HAL_UART_Receive_IT</code></h4>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-function">HAL_StatusTypeDef <span class="hljs-title">HAL_UART_Receive_IT</span><span class="hljs-params">(UART_HandleTypeDef *huart, <span class="hljs-type">uint8_t</span> *pData, <span class="hljs-type">uint16_t</span> Size)</span></span>;<br></code></pre></td></tr></table></figure>
+<p>这位英雄的角色是 <strong>“快递预订员”</strong> 。每次调用它，就好比你跟前台说：“嘿，请帮我留意一下， <strong>下一个</strong> （而且 <strong>仅仅一个</strong> ，因为我们Size=1）送来的包裹，到了之后 <strong>立刻</strong> （中断方式）通知我（触发中断），并把它放到 <strong>这个指定的位置</strong> （pData指向的内存）。”</p>
+<p><strong>更形象的比喻：</strong> 想象你在门口装了一个红外传感器（硬件中断标志位 RXNE - Read Data Register Not Empty），专门检测有没有人（数据字节）进来。调用 <code>HAL_UART_Receive_IT</code> 就是给这个传感器&quot;通电&quot;（使能 RXNE 中断），并告诉它：“一旦有人触发了你，就立刻拉响警报（触发中断），同时把这个人引导到指定的房间（pData 指向的内存地址）。”</p>
+<p>它的&quot;台词&quot;（参数）解读：</p>
+<ul>
+<li>
+<p><code>UART_HandleTypeDef *huart</code> : 告诉预订员是哪个&quot;快递站&quot;（比如 <code>&amp;huart1</code> ）的包裹。</p>
+</li>
+<li>
+<p><code>uint8_t *pData</code> : 指定包裹送达后要存放的&quot;货位地址&quot;（比如 <code>&amp;uart_rx_buffer[uart_rx_index]</code> ）。</p>
+</li>
+<li>
+<p><code>uint16_t Size</code> : 指定这次预订接收的包裹&quot;数量&quot;。在我们的超时解析法中，为了能及时响应每个字节，我们每次都只预订 <strong>1</strong> 个字节。</p>
+</li>
+</ul>
+<p>⚡</p>
+<p><strong>关键点 IT (Interrupt - 中断):</strong> 函数名末尾的 <code>_IT</code> 是关键！它表示这是一个 <strong>非阻塞</strong> 的操作。你跟前台预订完就可以走了，去做别的事情。当包裹真的到达时，硬件会自动触发一个&quot;中断信号&quot;，就像前台给你打了个紧急电话，而不是让你一直在那里傻等。这使得 CPU 可以高效地处理其他任务，只在数据到达时才介入。</p>
+<p><strong>调用时机：</strong></p>
+<ol>
+<li>
+<p><strong>初始化时：</strong> 在系统启动后，需要调用一次 <code>HAL_UART_Receive_IT(&amp;huart1, &amp;uart_rx_buffer[0], 1);</code> 来&quot;预订&quot;第一个字节的到来，相当于第一次给门口的传感器通电。</p>
+</li>
+<li>
+<p><strong>中断回调中：</strong> 当一个字节成功接收并触发了中断回调函数（ <code>HAL_UART_RxCpltCallback</code> ）后， <strong>必须</strong> 在回调函数内部再次调用 <code>HAL_UART_Receive_IT</code> 来&quot;预订&quot; <strong>下一个</strong> 字节。这就像警报响过后，你需要手动再次给传感器&quot;重新通电&quot;，否则它检测到一次之后就失效了。</p>
+</li>
+</ol>
+<p>简化流程：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><code class="hljs bash">你调用 HAL_UART_Receive_IT(huart, pData, 1);<br>  |<br>  v<br>HAL库: <span class="hljs-string">&quot;好的, 知道了!&quot;</span><br>  - 检查串口状态 (huart-&gt;RxState)<br>  - 记录下你的要求: pData地址, Size=1<br>  - 关键: 打开<span class="hljs-string">&#x27;接收不为空&#x27;</span>中断开关 (使能 RXNEIE 位)<br>  - 更新串口状态为 <span class="hljs-string">&quot;正在接收(中断模式)&quot;</span><br>  |<br>  v<br>(CPU去做别的事情了...)<br> <br>(某个时刻, 硬件接收到一个字节)<br>  |<br>  v<br>硬件: <span class="hljs-string">&quot;嘿, 数据寄存器里有新东西了!&quot;</span> (自动设置 RXNE 标志位)<br>  |<br>  v<br>(如果 RXNEIE 中断开关是打开的)<br>  |<br>  v<br>硬件: <span class="hljs-string">&quot;触发 UART 中断信号给 CPU!&quot;</span><br>  |<br>  v<br>CPU: <span class="hljs-string">&quot;收到中断! 跳转到 UART 中断服务程序...&quot;</span><br></code></pre></td></tr></table></figure>
+<h4 id="4-7-2-“快递已送达！”：-HAL-UART-RxCpltCallback">4.7.2 “快递已送达！”： <code>HAL_UART_RxCpltCallback</code></h4>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">HAL_UART_RxCpltCallback</span><span class="hljs-params">(UART_HandleTypeDef *huart)</span></span>;<br></code></pre></td></tr></table></figure>
+<p>这位是&quot;收货确认员&quot;，但它不是你主动去调用的，而是 HAL 库这位&quot;大管家&quot;在特定事件发生时自动呼叫的。哪个特定事件呢？就是你之前通过 <code>HAL_UART_Receive_IT</code> 预订的那个字节，它 <strong>完整接收成功</strong> 了！</p>
+<p>这个函数就像是前台给你的那个&quot;紧急电话&quot;：“喂！你之前订的那个包裹（那 1 个字节）已经送到了！请指示下一步操作。”</p>
+<p>它的&quot;台词&quot;只有一个参数：</p>
+<ul>
+<li><code>UART_HandleTypeDef *huart</code> : 表明是哪个&quot;快递站&quot;（比如 <code>USART1</code>）打来的电话，方便你管理多个串口。</li>
+</ul>
+<p><strong>回调 (Callback) 的含义：</strong> 这个函数是一种特殊的设计模式，叫做&quot;回调&quot;。你不需要显式地调用它，只需要把它实现好（就像写好接电话后的标准处理流程）。HAL 库会在合适的时机（数据接收完成时）自动&quot;回头调用&quot; (call back) 你写的这个函数。</p>
+<p><strong>重要特性：弱函数 (Weak Function)</strong></p>
+<p>HAL 库中的很多回调函数（包括这个）都被声明为 <code>__weak</code> (或者类似的编译器特定语法)。这就像一个&quot;默认的接线员&quot;，如果你不提供自己的版本，系统会使用这个默认的、通常什么也不做的版本。但一旦你在自己的代码中 <strong>定义了一个同名的、非 weak 的函数</strong> （就像我们做的那样），链接器就会忽略那个弱的默认版本，转而使用你提供的&quot;定制接线员&quot;。这使得用户可以方便地在自己的代码中&quot;覆盖&quot;或&quot;重写&quot; HAL 库的默认中断处理行为，而无需修改库本身的源码，大大提高了代码的可维护性和模块化。</p>
+<p><strong>函数内部的标准处理流程（我们代码中的实现）：</strong></p>
+<ol>
+<li>
+<p><strong>确认&quot;来电显示&quot; ( <code>if (huart-&gt;Instance == USART1)</code> ):</strong> 检查是不是我们关心的那个串口（USART1）打来的电话。</p>
+</li>
+<li>
+<p><strong>记录&quot;收货时间&quot; ( <code>uart_rx_ticks = uwTick;</code> ):</strong> 立刻记下当前时间，这是超时判断的关键依据。</p>
+</li>
+<li>
+<p><strong>更新&quot;库存数量&quot; ( <code>uart_rx_index++;</code> ):</strong> 将表示已收字节数的&quot;计数器&quot;加一。（注意：HAL 库在调用这个回调之前，已经默默地把收到的那个字节放到了你上次通过 <code>HAL_UART_Receive_IT</code> 指定的 <code>pData</code> 位置了）。</p>
+</li>
+<li>
+<p><strong>“预订下一个包裹” ( <code>HAL_UART_Receive_IT(...)</code> ):</strong> 这是最重要的环节！处理完这个字节后，必须立刻告诉前台：“好的，知道了。请继续帮我留意下一个包裹，到了还放老地方的下一个格子（ <code>&amp;uart_rx_buffer[uart_rx_index]</code> ），数量还是 1 个。” 这一步重新&quot;激活&quot;了中断接收，确保程序能够接收后续的字节。如果忘了这一步，你的串口就变成&quot;一次性&quot;的了。</p>
+</li>
+</ol>
+<p><strong>工作循环：</strong> <code>HAL_UART_Receive_IT</code> 启动监听 -&gt; 硬件接收完成 -&gt; 触发中断 -&gt; HAL 库调用 <code>HAL_UART_RxCpltCallback</code> -&gt; 在回调中再次调用 <code>HAL_UART_Receive_IT</code> 启动下一次监听… 这个循环不断进行，实现了字节流的连续接收。</p>
+<p>中断 -&gt; 回调 流程：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><code class="hljs bash">CPU: <span class="hljs-string">&quot;收到 UART 中断! 跳转到 UART 中断服务程序 (ISR)...&quot;</span><br>  |<br>  v<br>(在 ISR 内部)<br>HAL库的 ISR 处理代码: <span class="hljs-string">&quot;让我看看是啥情况...&quot;</span><br>  - 检查是哪个中断标志位触发了? (比如是 RXNE?)<br>  - 如果是 RXNE:<br>    - 从硬件数据寄存器读取那个字节<br>    - 把它存到上次 Receive_IT 指定的 pData 地址<br>    - 清除 RXNE 中断标志位 (告诉硬件处理完了)<br>    - <span class="hljs-string">&quot;哦, 这次接收操作 (Size=1) 完成了!&quot;</span><br>    - <span class="hljs-string">&quot;是时候通知用户了...&quot;</span><br>    - 调用 HAL_UART_RxCpltCallback(huart);<br>  |<br>  v<br>(进入我们写的 HAL_UART_RxCpltCallback 函数)<br>我们代码: <span class="hljs-string">&quot;电话响了!&quot;</span><br>  - <span class="hljs-keyword">if</span> (huart-&gt;Instance == USART1) &#123; ... &#125;<br>  - uart_rx_ticks = uwTick;<br>  - uart_rx_index++;<br>  - 再次调用 HAL_UART_Receive_IT(...) 为下一次接收做准备!<br>  - (函数结束, 从中断返回)<br></code></pre></td></tr></table></figure>
+<h4 id="4-7-3-“发快递啦！”：-HAL-UART-Transmit">4.7.3 “发快递啦！”： <code>HAL_UART_Transmit</code></h4>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-function">HAL_StatusTypeDef <span class="hljs-title">HAL_UART_Transmit</span><span class="hljs-params">(UART_HandleTypeDef *huart, <span class="hljs-type">uint8_t</span> *pData, <span class="hljs-type">uint16_t</span> Size, <span class="hljs-type">uint32_t</span> Timeout)</span></span>;<br></code></pre></td></tr></table></figure>
+<p>这位是&quot;快递发货员&quot;。当你需要通过串口向外发送数据时，就调用它。就像你把打包好的、写好地址的一批货交给发货员，告诉他：“把这些货（数据）从这个快递站（串口）发出去。”</p>
+<p>它的&quot;台词&quot;（参数）解读：</p>
+<ul>
+<li>
+<p><code>UART_HandleTypeDef *huart</code> : 指定从哪个&quot;快递站&quot;（比如 <code>&amp;huart1</code> ）发货。</p>
+</li>
+<li>
+<p><code>uint8_t *pData</code> : 指向你要发送的那批&quot;货物&quot;（数据缓冲区，比如 <code>my_printf</code> 函数中的 <code>buffer</code> ）。</p>
+</li>
+<li>
+<p><code>uint16_t Size</code> : 这批货物的&quot;总件数&quot;（要发送的数据长度，比如 <code>my_printf</code> 计算出的 <code>len</code> ）。</p>
+</li>
+<li>
+<p><code>uint32_t Timeout</code> : 发货超时时间（单位毫秒）。如果在这个时间内，硬件一直忙碌无法开始发送，函数就会放弃并返回一个超时错误。你可以设置为 <code>HAL_MAX_DELAY</code> 表示一直等待直到能发送为止。</p>
+</li>
+</ul>
+<p><strong>阻塞 vs. 非阻塞 (中断/DMA)：</strong></p>
+<h5 id="阻塞模式-HAL-UART-Transmit">阻塞模式 ( <code>HAL_UART_Transmit</code> )</h5>
+<p>你把一箱货交给发货员，然后就站在旁边一直盯着他，直到他把箱子里 <strong>所有</strong> 的货一件件发出去（或者等到超时你放弃了），你才能离开。</p>
+<p><strong>优点：</strong> 代码简单，逻辑直接。</p>
+<p><strong>缺点：</strong> 如果货物很多或发送慢，CPU 会一直卡在这里等待，无法处理其他紧急事务。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs bash">你: 调用 Transmit(data, size)<br>CPU: (循环检查硬件状态...)<br>   - 硬件发送缓冲区空了吗? (检查 TXE 位)<br>   - 如果空了, 把下一个字节放入发送缓冲区<br>   - (重复 size 次...)<br>   - 所有字节都进发送缓冲区了?<br>   - 硬件发送完成了吗? (检查 TC 位)<br>   - 完成了! 函数返回。<br>(CPU 被阻塞了很久...)<br></code></pre></td></tr></table></figure>
+<h5 id="非阻塞模式-IT-DMA">非阻塞模式 ( <code>_IT</code> / <code>_DMA</code> )</h5>
+<p>你把货交给发货员，然后告诉他：“货发完了打我电话（中断）。” 然后你就离开了，去做别的事。发货员自己处理，完成后通过中断通知你。</p>
+<p><strong>优点：</strong> CPU 不会被阻塞，可以高效处理其他任务。</p>
+<p><strong>缺点：</strong> 需要配合中断回调函数来处理&quot;发送完成&quot;事件，逻辑稍微复杂一点。DMA 方式效率最高，连字节搬运都无需 CPU 操心。</p>
+<p>对于少量调试信息，阻塞方式足够简单。但在需要同时处理接收和其他任务的场景下，非阻塞方式通常是更好的选择。</p>
+<p>在我们的 <code>my_printf</code> 函数中，就是调用了它来将格式化好的字符串通过串口发送给电脑的串口助手。</p>
+<h4 id="4-7-4-“精准计时器”：-uwTick">4.7.4 “精准计时器”： <code>uwTick</code></h4>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-keyword">extern</span> <span class="hljs-keyword">volatile</span> <span class="hljs-type">uint32_t</span> uwTick;<br></code></pre></td></tr></table></figure>
+<p>这位不是函数，而是一个全局变量，可以理解为整个系统（或大楼）的&quot;中央时钟脉冲计数器&quot;。</p>
+<ul>
+<li>
+<p><strong>来源：</strong> 它通常由一个叫做 <strong>SysTick</strong> 的硬件定时器驱动。你可以把 SysTick 配置为每 1 毫秒产生一次中断。</p>
+</li>
+<li>
+<p><strong>工作方式：</strong> 在 SysTick 定时器的中断服务函数（通常是 <code>SysTick_Handler</code> ）中，HAL 库会自动执行 <code>HAL_IncTick()</code> 函数，这个函数的作用就是把 <code>uwTick</code> 这个变量的值加 1。</p>
+</li>
+<li>
+<p><strong>作用：</strong> 因为 <code>uwTick</code> 每毫秒加 1，所以它的值就代表了从系统启动开始经过的总毫秒数。```bash<br>
+系统启动 -&gt; uwTick = 0;<br>
+1ms 后   -&gt; SysTick 中断 -&gt; HAL_IncTick() -&gt; uwTick = 1;<br>
+再 1ms 后 -&gt; SysTick 中断 -&gt; HAL_IncTick() -&gt; uwTick = 2;<br>
+再 1ms 后 -&gt; SysTick 中断 -&gt; HAL_IncTick() -&gt; uwTick = 3;<br>
+… (以此类推)</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs">  <br></code></pre></td></tr></table></figure>
+</li>
+</ul>
+<p><strong>超时判断的基石：</strong> 在我们的超时解析逻辑 <code>if (uwTick - uart_rx_ticks &gt; UART_TIMEOUT_MS)</code> 中， <code>uwTick</code> 提供了当前的精确时间， <code>uart_rx_ticks</code> 保存了上次收到字节的时间戳，两者相减就得到了时间间隔，从而判断是否超时。 <code>uwTick</code> 是实现各种基于时间的逻辑（延时、超时等）的基础。</p>
+<p><strong><code>volatile</code> 关键字：</strong> 这个关键字告诉编译器， <code>uwTick</code> 的值随时可能在程序当前流程之外被改变（被 SysTick 中断改变）。因此，每次读取 <code>uwTick</code> 时，编译器都必须老老实实地从内存中重新获取它的最新值，而不能使用可能存在于寄存器中的旧的缓存值，从而保证了计时逻辑的准确性。</p>
+<p><strong>回卷问题：</strong> 作为一个 32 位无符号整数， <code>uwTick</code> 大约每 49.7 天会溢出回零。但正如前面提到，使用 <code>(uint32_t)currentTime - (uint32_t)lastTime</code> 的方式计算时间差，只要时间差没有超过约 24.8 天，就能正确处理回卷，所以在绝大多数应用中无需担心。</p>
+<h3 id="7-5-HAL-库的设计哲学与工作机制">7.5 HAL 库的设计哲学与工作机制</h3>
+<p>了解了具体的 API 后，我们不妨退后一步，看看 STMicroelectronics 设计 HAL (Hardware Abstraction Layer - 硬件抽象层) 库的初衷和一些核心思想。这有助于我们理解为什么 API 是这样设计的，以及如何更有效地使用它。</p>
+<h5 id="🎯-核心目标：抽象与可移植性">🎯 核心目标：抽象与可移植性</h5>
+<p>想象一下，如果没有 HAL 库，你需要直接操作底层的硬件寄存器。不同的 STM32 型号（比如 F1, F4, L4, H7 系列）它们的寄存器地址、位定义可能千差万别。为 F1 写的外设驱动代码，几乎无法直接用在 F4 上。</p>
+<p>HAL 库的核心价值就在于 <strong>抽象</strong> 。它提供了一套 <strong>统一的、功能导向的 API</strong> ，屏蔽了底层硬件寄存器的差异。你只需要调用像 <code>HAL_UART_Transmit</code> 这样的函数，而不需要关心具体是往哪个地址的哪个寄存器的哪个位写入了什么值。这使得你的应用程序代码具有 <strong>更好的可移植性</strong> ，更换不同的 STM32 芯片时，上层代码的修改量大大减少。</p>
+<p>抽象层级示意：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs bash">+-----------------------+<br>|     你的应用程序代码    |<br>| (调用 HAL_UART_... ) |<br>+-----------+-----------+<br>            |<br>            v<br>+-----------+-----------+<br>|      HAL 库 API       |<br>| (HAL_UART_Transmit 等) |<br>+-----------+-----------+<br>            |  (HAL 内部根据不同芯片型号，执行不同的底层代码)<br>            v<br>+-----------+-----------+   +-----------+-----------+<br>| STM32F1xx 底层驱动    |   | STM32F4xx 底层驱动    | ...<br>| (操作 F1 寄存器)    |   | (操作 F4 寄存器)    |<br>+-----------------------+   +-----------------------+<br></code></pre></td></tr></table></figure>
+<h5 id="🔧-核心机制：句柄-Handle-与状态管理">🔧 核心机制：句柄 (Handle) 与状态管理</h5>
+<p>你会发现几乎所有的 HAL 函数都需要一个 <code>UART_HandleTypeDef *huart</code> 这样的参数。这个被称为&quot;句柄&quot; (Handle) 的结构体非常关键。</p>
+<p>它就像是这个外设（比如 USART1）的&quot;身份证&quot;和&quot;状态记录本&quot;。里面包含了：</p>
+<ul>
+<li>
+<p><strong>配置信息：</strong> 初始化时设定的波特率、数据位、停止位等参数。</p>
+</li>
+<li>
+<p><strong>状态变量：</strong> 记录当前外设是空闲、正在发送还是正在接收（比如 <code>huart-&gt;gState</code> , <code>huart-&gt;RxState</code> ）。HAL 函数会根据这些状态来判断能否执行某个操作。</p>
+</li>
+<li>
+<p><strong>数据指针和计数器：</strong> 在中断或 DMA 模式下，记录用户数据缓冲区地址（ <code>pRxBuffPtr</code> ）、还需要接收/发送多少数据（ <code>RxXferSize</code> , <code>RxXferCount</code> ）等。</p>
+</li>
+<li>
+<p><strong>底层硬件寄存器地址：</strong> 指向具体的硬件实例（比如 <code>huart-&gt;Instance = USART1;</code> ）。</p>
+</li>
+</ul>
+<p>通过传递这个句柄，HAL 函数就能知道要操作哪个具体的硬件实例，以及它当前的状态和相关数据信息，从而实现正确的操作和管理。</p>
+<h5 id="🎣-核心机制：回调-Callback-与弱函数-Weak-Functions">🎣 核心机制：回调 (Callback) 与弱函数 (Weak Functions)</h5>
+<p>正如在 <code>HAL_UART_RxCpltCallback</code> 中提到的，HAL 库广泛使用回调机制来处理异步事件（如中断）。</p>
+<p>它定义了一系列标准的事件回调函数（如接收完成、发送完成、错误发生等），并将它们声明为 <strong>弱函数</strong> 。这意味着：</p>
+<ol>
+<li>
+<p>HAL 库提供了一个（通常为空的）默认实现。</p>
+</li>
+<li>
+<p>用户可以在自己的代码中提供一个同名的、非弱的实现来&quot;覆盖&quot;默认行为。</p>
+</li>
+<li>
+<p>当对应的硬件事件发生时（例如，在中断服务程序中检测到接收完成），HAL 的中断处理代码会调用这个（可能是用户覆盖后的）回调函数。</p>
+</li>
+</ol>
+<p>这种设计使得用户代码和库代码得以解耦。用户无需修改库源码，就能方便地将自己的处理逻辑&quot;挂载&quot;到特定的硬件事件上。</p>
+<h5 id="🚦-核心机制：多模式支持-阻塞-中断-DMA">🚦 核心机制：多模式支持 (阻塞/中断/DMA)</h5>
+<p>HAL 库通常为数据传输操作（如 UART 收发、SPI 收发等）提供多种模式：</p>
+<ul>
+<li>
+<p><strong>阻塞模式 (Polling):</strong> 函数会一直等待操作完成才返回。简单直接，但会阻塞 CPU。</p>
+</li>
+<li>
+<p><strong>中断模式 (Interrupt):</strong> 函数启动操作后立刻返回，操作完成后通过中断和回调函数通知用户。CPU 不被阻塞，但中断处理本身会消耗 CPU 时间。</p>
+</li>
+<li>
+<p><strong>DMA 模式 (Direct Memory Access):</strong> 配置 DMA 控制器来处理内存和外设之间的数据传输，传输过程几乎不占用 CPU 时间，完成后通过中断通知用户。效率最高，尤其适合大数据量传输。</p>
+</li>
+</ul>
+<p>提供这些不同的模式，让开发者可以根据应用的具体需求（实时性要求、数据量大小、CPU 负载等）选择最合适的工作方式。</p>
+<p>理解了这些设计思路，能帮助我们更好地利用 HAL 库的优势，并更容易地排查问题。例如，当中断没有按预期触发时，我们知道要去检查是否正确调用了 <code>_IT</code> 版本的函数、是否在回调中重新启动了接收、中断是否被正确使能等。</p>
+<h4 id="4-7-6-“委托全能搬运工”：-HAL-UARTEx-ReceiveToIdle-DMA">4.7.6 “委托全能搬运工”： <code>HAL_UARTEx_ReceiveToIdle_DMA</code></h4>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-function">HAL_StatusTypeDef <span class="hljs-title">HAL_UARTEx_ReceiveToIdle_DMA</span><span class="hljs-params">(UART_HandleTypeDef *huart, <span class="hljs-type">uint8_t</span> *pData, <span class="hljs-type">uint16_t</span> Size)</span></span>;<br></code></pre></td></tr></table></figure>
+<p>这位英雄是 <code>HAL_UART_Receive_IT</code> 的升级版，专门用于配合 DMA 和空闲中断。它不仅启动接收，还同时配置和启动了 DMA 控制器，并设置了空闲线路检测。</p>
+<p><strong>它的指令更复杂：</strong> “嘿，DMA 搬运工 (已通过 <code>huart</code> 句柄关联好)，你现在去串口收货口 (<code>huart-&gt;Instance</code>) 守着。一旦有货 (<code>数据字节</code>) 进来，你就用你专属的通道，直接把它搬到仓库的这个临时区域 (<code>pData</code>)。这个区域总共能放 <code>Size</code> 件货。你一直搬，同时注意听着收货口的动静，如果突然安静了超过一个字节的时间（总线空闲，IDLE 事件），或者你把这个临时区域 (<code>pData</code> 指向的内存，大小为 <code>Size</code>) 给堆满了 (DMA TC 事件)，都要立刻通过内部专线（中断）向我（CPU）汇报！”</p>
+<p>关键参数和 <code>HAL_UART_Receive_IT</code> 类似：</p>
+<ul>
+<li>
+<p><code>huart</code> : 指定哪个串口及其关联的 DMA 配置。</p>
+</li>
+<li>
+<p><code>pData</code> : DMA 搬运的目标内存地址（通常是 DMA 专用缓冲区）。</p>
+</li>
+<li>
+<p><code>Size</code> : 本次 DMA 传输期望的最大字节数（DMA 缓冲区的总大小）。DMA 会持续接收，直到接收满 <code>Size</code> 个字节，或者中途检测到总线空闲。</p>
+</li>
+</ul>
+<p>✨</p>
+<p><strong>“Ex” 与 “ToIdle”：</strong> 函数名中的 “Ex” (Extended) 表明这是 HAL 库的扩展功能。 “ReceiveToIdle” 则清晰地指出了它的核心机制：接收数据，直到检测到总线空闲。它内部封装了启动 DMA、使能 UART 空闲中断 (IDLEIE) 和可能的 DMA 相关中断的复杂逻辑。</p>
+<p>调用这个函数后，CPU 基本就可以高枕无忧了，数据的字节级搬运完全交给了 DMA，CPU 只需等待最终的&quot;收工报告&quot;（中断）。</p>
+<h4 id="4-7-7-“紧急暂停！”：-HAL-UART-DMAStop">4.7.7 “紧急暂停！”： <code>HAL_UART_DMAStop</code></h4>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-function">HAL_StatusTypeDef <span class="hljs-title">HAL_UART_DMAStop</span><span class="hljs-params">(UART_HandleTypeDef *huart)</span></span>;<br></code></pre></td></tr></table></figure>
+<p>这位的作用是 <strong>“叫停搬运工”</strong> 。当你因为某种原因（比如检测到了空闲中断，明确知道对方已经停止发送了）需要强制停止当前正在进行的 UART DMA 传输时，就调用它。</p>
+<p><strong>类比：</strong> 老板（CPU）通过内部电话（中断）得知收货口没货了（空闲事件），但搬运工（DMA）可能还在那里傻等（因为它被告知要搬满 <code>Size</code> 个才算完）。老板立刻通知搬运工：“好了好了，别等了，活儿先停下！”</p>
+<p>它的参数只有一个：</p>
+<ul>
+<li><code>huart</code> : 指明要停止哪个串口的 DMA 操作。</li>
+</ul>
+<p><strong>为何在 RxEventCallback 中调用？</strong> 在 DMA + 空闲中断模式下，当空闲中断触发 <code>RxEventCallback</code> 时，我们明确知道发送方已经停止发送。但 DMA 控制器本身可能还在运行（因为它设置的目标是接收 <code>Size</code> 个字节，可能还没满）。此时调用 <code>HAL_UART_DMAStop</code> 可以利落地终止当前的 DMA 传输，清理相关状态，防止 DMA 出错或继续无效等待，为后续重新启动 DMA 接收做好准备。</p>
+<h4 id="4-7-8-“收工汇报！”：-HAL-UARTEx-RxEventCallback">4.7.8 “收工汇报！”： <code>HAL_UARTEx_RxEventCallback</code></h4>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">HAL_UARTEx_RxEventCallback</span><span class="hljs-params">(UART_HandleTypeDef *huart, <span class="hljs-type">uint16_t</span> Size)</span></span>;<br></code></pre></td></tr></table></figure>
+<p>这位是 DMA + 空闲中断模式下的 <strong>“核心事件处理员”</strong> 。它也是一个弱函数回调，但触发它的事件比较特殊，通常是以下两者之一（或两者都配置了）：</p>
+<ol>
+<li>
+<p><strong>UART 空闲中断 (IDLE):</strong> 检测到串口总线进入空闲状态，表明一次数据传输很可能已经结束。</p>
+</li>
+<li>
+<p><strong>DMA 传输完成/半完成 (TC/HT):</strong> DMA 控制器完成了预设数量（Size 或 Size/2）的数据搬运。</p>
+</li>
+</ol>
+<p>在我们的应用中，主要关心的是 <strong>IDLE 空闲事件</strong> 。当这个事件发生时，HAL 库的 <code>HAL_UART_IRQHandler</code> 会捕捉到，并最终调用这个回调函数。</p>
+<p><strong>它的&quot;汇报内容&quot;（参数）：</strong></p>
+<ul>
+<li>
+<p><code>huart</code> : 哪个串口的事件。</p>
+</li>
+<li>
+<p><code>Size</code> : <strong>至关重要！</strong> 这个参数告诉你，从上次启动 <code>HAL_UARTEx_ReceiveToIdle_DMA</code> 到本次事件（特别是空闲事件）发生时，DMA 搬运工 <strong>实际</strong> 搬运了多少个字节的数据到内存缓冲区。这个值可能小于、等于你启动 DMA 时设定的缓冲区总大小。</p>
+</li>
+</ul>
+<p><strong>函数内部的标准处理流程（DMA+空闲中断模式）：</strong></p>
+<ol>
+<li>
+<p><strong>确认串口 ( <code>if</code> 判断)。</strong></p>
+</li>
+<li>
+<p><strong>停止 DMA ( <code>HAL_UART_DMAStop(huart);</code> ):</strong> 如前所述，确保停止当前的 DMA 操作。</p>
+</li>
+<li>
+<p><strong>处理数据 ( <code>memcpy</code> + 设置标志):</strong> 使用回调函数提供的 <code>Size</code> 参数，将 DMA 缓冲区中实际接收到的有效数据，拷贝到应用程序的处理缓冲区（例如 <code>uart_dma_buffer</code>）。然后设置一个标志（如 <code>uart_flag = 1;</code>）通知主循环。</p>
+</li>
+<li>
+<p><strong>清空 DMA 缓冲区 ( <code>memset</code> ):</strong> 为下一次接收做准备。</p>
+</li>
+<li>
+<p><strong>重新启动接收 ( <code>HAL_UARTEx_ReceiveToIdle_DMA(...)</code> ):</strong> 必须再次调用它，才能接收下一帧数据。</p>
+</li>
+</ol>
+<p>🔑</p>
+<p><strong>关键在于 Size:</strong> 正确使用 <code>Size</code> 参数是从 DMA 缓冲区提取有效数据的关键。如果忽略 <code>Size</code> 而总是处理整个 DMA 缓冲区，可能会处理到上次残留的数据或者无效数据。</p>
+<h4 id="4-7-9-“屏蔽干扰信号”：-HAL-DMA-DISABLE-IT-宏">4.7.9 “屏蔽干扰信号”： <code>__HAL_DMA_DISABLE_IT</code> (宏)</h4>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs cpp">__HAL_DMA_DISABLE_IT(HANDLE, INTERRUPT)<br></code></pre></td></tr></table></figure>
+<p>严格来说，这位不是一个函数，而是一个 <strong>宏 (Macro)</strong> 。宏在编译预处理阶段就会被替换成实际的寄存器操作代码。它的作用是关闭指定的 DMA 通道上的特定中断。</p>
+<p><strong>类比：</strong> DMA 搬运工除了能在&quot;完成任务&quot;或&quot;检测到空闲&quot;时给老板打电话（触发中断）外，还可能在&quot;任务完成一半&quot;（Half Transfer）时也打个电话。如果我们不关心这个&quot;中途汇报&quot;，觉得它是个干扰，就可以用这个宏告诉系统：“别让搬运工因为’完成一半’这种小事就给我打电话！”</p>
+<p><strong>参数解读：</strong></p>
+<ul>
+<li>
+<p><code>HANDLE</code> : DMA 的句柄（例如 <code>&amp;hdma_usart1_rx</code>），指明是哪个 DMA 通道。</p>
+</li>
+<li>
+<p><code>INTERRUPT</code> : 要禁用的具体中断类型，HAL 库定义了一些常量，例如：</p>
+<ul>
+<li>
+<p><code>DMA_IT_TC</code> : 传输完成中断 (Transfer Complete)</p>
+</li>
+<li>
+<p><code>DMA_IT_HT</code> : 半传输中断 (Half Transfer)</p>
+</li>
+<li>
+<p><code>DMA_IT_TE</code> : 传输错误中断 (Transfer Error)</p>
+</li>
+</ul>
+<p>在我们的例子中，使用 <code>DMA_IT_HT</code> 来禁用半传输中断。</p>
+</li>
+</ul>
+<p><strong>为何禁用 HT 中断？</strong> 在空闲中断接收模式下，我们通常只关心数据帧的结束（由 IDLE 中断指示），而不关心 DMA 缓冲区是否刚好填满了一半。HT 中断如果触发，可能会调用与 TC/IDLE 相同的 <code>RxEventCallback</code>，干扰我们判断数据帧结束的逻辑。因此，显式禁用 HT 中断可以简化处理流程，避免不必要的干扰。</p>
+<p>通常，如果在初始化后调用了一次 <code>__HAL_DMA_DISABLE_IT(..., DMA_IT_HT)</code> ，那么在 <code>RxEventCallback</code> 中重新启动 DMA ( <code>HAL_UARTEx_ReceiveToIdle_DMA</code> ) 之后，可能也需要再次调用这个宏来确保 HT 中断保持禁用状态，因为启动函数可能会重新使能它。</p>
 
                 
               </div>
@@ -718,8 +1515,8 @@ RTOS的内存管理机制<br>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2026/02/18/%E5%B5%8C%E5%85%A5%E5%BC%8F%E5%AD%A6%E4%B9%A0/%E8%B8%A9%E5%9D%91%E5%85%A8%E9%83%A8/" title="">
-                        <span class="hidden-mobile"></span>
+                      <a href="/2026/02/18/%E5%B5%8C%E5%85%A5%E5%BC%8F%E5%AD%A6%E4%B9%A0/%E8%B8%A9%E5%9D%91%E5%85%A8%E9%83%A8/" title="踩坑">
+                        <span class="hidden-mobile">踩坑</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
