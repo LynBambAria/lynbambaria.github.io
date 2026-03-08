@@ -52,7 +52,7 @@
 <meta property="og:image" content="http://example.com/2026/03/05/%E9%9D%A2%E7%BB%8F/%E5%B5%8C%E5%85%A5%E5%BC%8F%E5%85%AB%E8%82%A1%E6%96%87/assets/0_20.png">
 <meta property="og:image" content="http://example.com/2026/03/05/%E9%9D%A2%E7%BB%8F/%E5%B5%8C%E5%85%A5%E5%BC%8F%E5%85%AB%E8%82%A1%E6%96%87/assets/0_1.png">
 <meta property="article:published_time" content="2026-03-05T11:20:47.034Z">
-<meta property="article:modified_time" content="2026-03-08T08:42:18.571Z">
+<meta property="article:modified_time" content="2026-03-08T15:46:58.505Z">
 <meta property="article:author" content="LynBambAria">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="http://example.com/2026/03/05/%E9%9D%A2%E7%BB%8F/%E5%B5%8C%E5%85%A5%E5%BC%8F%E5%85%AB%E8%82%A1%E6%96%87/assets/0_1.png">
@@ -266,7 +266,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          36k 字
+          37k 字
         
       </span>
     
@@ -277,7 +277,7 @@
         
         
         
-          300 分钟
+          311 分钟
         
       </span>
     
@@ -328,7 +328,7 @@
               <p id="updated-time" class="note note-info" style="">
                 
                   
-                    本文最后更新于 2026年3月8日 下午
+                    本文最后更新于 2026年3月8日 晚上
                   
                 
               </p>
@@ -2857,6 +2857,79 @@ $$</p>
 <p>原因：喂狗时机错误（如在程序异常后才喂狗）；或密钥写入错误（如误写0x5555以外的数值解锁）。 解决：将喂狗操作放在主程序循环的“安全节点”；核对密钥值（STM32中解锁密钥为0x5555，喂狗密钥为0xAAAA）。</p>
 <h4 id="3-主时钟故障后看门狗不工作？">3. 主时钟故障后看门狗不工作？</h4>
 <p>原因：误将主时钟作为独立看门狗的时钟源（部分MCU支持可选时钟，但独立看门狗默认用LSI）。 解决：确认时钟源配置，强制独立看门狗使用内部LSI时钟。</p>
+<h2 id="9-ModbusRTU">9. ModbusRTU</h2>
+<h2 id="10-CAN">10. CAN</h2>
+<h2 id="11-RS485">11. RS485</h2>
+<h2 id="12-4-20mA">12. 4-20mA</h2>
+<h2 id="13-PWM">13. PWM</h2>
+<h1>二、数据结构</h1>
+<h2 id="1-概念">1. 概念</h2>
+<h2 id="2-时间、空间复杂度">2. 时间、空间复杂度</h2>
+<h2 id="3-线性表">3. 线性表</h2>
+<h2 id="4-栈和队列">4. 栈和队列</h2>
+<h2 id="5-串、数列、广义表">5. 串、数列、广义表</h2>
+<h2 id="6-数和二叉树">6. 数和二叉树</h2>
+<h2 id="7-图">7. 图</h2>
+<h2 id="8-查找">8. 查找</h2>
+<h2 id="9-排序">9. 排序</h2>
+<h3 id="9-1-交换排序">9.1 交换排序</h3>
+<h4 id="冒泡排序讲解">冒泡排序<a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV181421876R/?spm_id_from=333.337.search-card.all.click&amp;vd_source=1e7a1d78191a0fa98e1dcb37d701d4f6">讲解</a></h4>
+<h5 id="核心思想">核心思想</h5>
+<p>每一轮遍历数组，比较相邻的两个元素：</p>
+<ul>
+<li>如果 前一个元素 &gt; 后一个元素，则交换它们的位置。</li>
+<li>每一轮结束后，当前未排序部分的最大值会“沉”到末尾，类似气泡上浮。</li>
+</ul>
+<h5 id="推导步骤">推导步骤</h5>
+<p>假设对一个长度为 n 的数组 arr 进行升序排序：</p>
+<ol>
+<li><strong>外层循环：</strong> 控制排序轮数（共 n-1 轮）。</li>
+<li><strong>内层循环：</strong> 每轮遍历未排序部分的相邻元素，进行比较和交换。每轮结束后，未排序部分的末尾元素已确定，下一轮无需再比较。</li>
+<li><strong>终止条件：</strong> 当某一轮没有发生任何交换时，说明数组已有序，提前结束。</li>
+</ol>
+<h5 id="基础代码">基础代码</h5>
+<figure class="highlight arduino"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs arduino"><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">bubble_sort</span><span class="hljs-params">(<span class="hljs-type">int</span> arr[], <span class="hljs-type">int</span> n)</span> </span>&#123;<br>    <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">0</span>; i &lt; n - <span class="hljs-number">1</span>; i++) &#123;<br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> j = <span class="hljs-number">0</span>; j &lt; n - i - <span class="hljs-number">1</span>; j++) &#123;<br>            <span class="hljs-keyword">if</span> (arr[j] &gt; arr[j + <span class="hljs-number">1</span>]) &#123;<br>                <span class="hljs-comment">// 交换</span><br>                <span class="hljs-type">int</span> temp = arr[j];<br>                arr[j] = arr[j + <span class="hljs-number">1</span>];<br>                arr[j + <span class="hljs-number">1</span>] = temp;<br>            &#125;<br>        &#125;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<h5 id="优化代码">优化代码</h5>
+<p><strong>Q：</strong> 如果待排序的数组是<strong>大部分有序</strong>，上述代码有什么效率问题？如何优化？<br>
+<strong>A：</strong> 添加一个<strong>标志位 flag</strong>。如果在某一轮排序中没有发生任何交换，说明数组已经有序，可以<strong>提前终止排序</strong>。</p>
+<figure class="highlight arduino"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs arduino"><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">bubble_sort_optimized</span><span class="hljs-params">(<span class="hljs-type">int</span> arr[], <span class="hljs-type">int</span> n)</span> </span>&#123;<br>    <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">0</span>; i &lt; n - <span class="hljs-number">1</span>; i++) &#123;<br>        <span class="hljs-type">int</span> swapped = <span class="hljs-number">0</span>; <span class="hljs-comment">// 标志位</span><br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> j = <span class="hljs-number">0</span>; j &lt; n - i - <span class="hljs-number">1</span>; j++) &#123;<br>            <span class="hljs-keyword">if</span> (arr[j] &gt; arr[j + <span class="hljs-number">1</span>]) &#123;<br>                <span class="hljs-type">int</span> temp = arr[j];<br>                arr[j] = arr[j + <span class="hljs-number">1</span>];<br>                arr[j + <span class="hljs-number">1</span>] = temp;<br>                swapped = <span class="hljs-number">1</span>;<br>            &#125;<br>        &#125;<br>        <span class="hljs-comment">// 如果这一轮没有交换，直接结束</span><br>        <span class="hljs-keyword">if</span> (swapped == <span class="hljs-number">0</span>) &#123;<br>            <span class="hljs-keyword">break</span>;<br>        &#125;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<hr>
+<p><strong>Q:</strong> 你这个 temp 变量在交换时占用了栈空间。在嵌入式内存受限（比如几十KB）的环境下，如果不用 temp，还能怎么交换两个数？<br>
+<strong>A：</strong> 使用异或（XOR）交换法（注意：只适用于整数，且当 a 和 b 指向同一地址时会出错，需谨慎）</p>
+<figure class="highlight inform7"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs inform7">if (arr<span class="hljs-comment">[j]</span> != arr<span class="hljs-comment">[j + 1]</span>) &#123; // 防止自异或归零<br>    arr<span class="hljs-comment">[j]</span> = arr<span class="hljs-comment">[j]</span> ^ arr<span class="hljs-comment">[j + 1]</span>;     // 第1步：arr<span class="hljs-comment">[j]</span> 变成 a^b<br>    arr<span class="hljs-comment">[j + 1]</span> = arr<span class="hljs-comment">[j]</span> ^ arr<span class="hljs-comment">[j + 1]</span>; // 第2步：arr<span class="hljs-comment">[j+1]</span> 变成 (a^b)^b = a<br>    arr<span class="hljs-comment">[j]</span> = arr<span class="hljs-comment">[j]</span> ^ arr<span class="hljs-comment">[j + 1]</span>;     // 第3步：arr<span class="hljs-comment">[j]</span> 变成 (a^b)^a = b<br>&#125;<br></code></pre></td></tr></table></figure>
+<p><strong>Q：</strong> 异或交换的优缺点<br>
+<strong>A：</strong> 优点：节省变量空间，缺点：可读性差、容易出错、对浮点型无效</p>
+<hr>
+<h5 id="复杂度">复杂度</h5>
+<p><strong>时间复杂度：</strong></p>
+<ul>
+<li>最坏：O(n²)</li>
+<li>平均：O(n²)</li>
+<li>最好：O(n)</li>
+</ul>
+<p><strong>空间复杂度：</strong></p>
+<ul>
+<li>O(1)（原地排序，属于稳定排序）</li>
+</ul>
+<h4 id="快速排序讲解">快速排序<a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1y4421Z7hK?spm_id_from=333.788.videopod.sections&amp;vd_source=1e7a1d78191a0fa98e1dcb37d701d4f6">讲解</a></h4>
+<h5 id="核心思想-2">核心思想</h5>
+<p>分治法，选基准pivot，将数组分两部分左边≤pivot右边≥pivot，递归排左右子数组。嵌入式常用高效排序。</p>
+<h5 id="代码">代码</h5>
+<figure class="highlight processing"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br></pre></td><td class="code"><pre><code class="hljs processing"><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * 快速排序函数</span><br><span class="hljs-comment"> * @param pArray 待排序的整数数组指针</span><br><span class="hljs-comment"> * @param Low    排序区间的起始下标</span><br><span class="hljs-comment"> * @param High   排序区间的结束下标</span><br><span class="hljs-comment"> * @return       返回0表示排序完成</span><br><span class="hljs-comment"> */</span><br><span class="hljs-type">int</span> <span class="hljs-title function_">QuickSort</span>(<span class="hljs-type">int</span> *pArray, <span class="hljs-type">int</span> Low, <span class="hljs-type">int</span> High)<br>&#123;<br>    <span class="hljs-type">int</span> i = <span class="hljs-number">0</span>;  <span class="hljs-comment">// 左指针，用于从左向右扫描</span><br>    <span class="hljs-type">int</span> j = <span class="hljs-number">0</span>;  <span class="hljs-comment">// 右指针，用于从右向左扫描</span><br>    <span class="hljs-type">int</span> <span class="hljs-built_in">key</span> = <span class="hljs-number">0</span>; <span class="hljs-comment">// 基准值，用于比较和分区</span><br>    <br>    <span class="hljs-comment">// 初始化：选择第一个元素作为基准值</span><br>    <span class="hljs-built_in">key</span> = pArray[Low];  <span class="hljs-comment">// 将区间第一个元素设为基准</span><br>    j = High;           <span class="hljs-comment">// j指向区间最后一个元素</span><br>    i = Low;            <span class="hljs-comment">// i指向区间第一个元素</span><br>    <br>    <span class="hljs-comment">// 核心分区过程：当左右指针相遇时结束</span><br>    <span class="hljs-keyword">while</span> (i &lt; j)<br>    &#123;<br>        <span class="hljs-comment">/**</span><br><span class="hljs-comment">         * 第一步：从右向左扫描，找第一个小于基准值的元素</span><br><span class="hljs-comment">         * 条件：只要当前元素 &gt;= 基准值且指针未相遇，就继续左移</span><br><span class="hljs-comment">         */</span><br>        <span class="hljs-keyword">while</span> (i &lt; j &amp;&amp; pArray[j] &gt;= <span class="hljs-built_in">key</span>)<br>        &#123;<br>            j--;  <span class="hljs-comment">// 右指针向左移动</span><br>        &#125;<br>        <span class="hljs-comment">// 找到了比基准小的元素，将其放到左边i的位置</span><br>        <span class="hljs-comment">// 注意：此时pArray[i]的值已经被保存到key中，可以直接覆盖</span><br>        pArray[i] = pArray[j];<br>        <br>        <span class="hljs-comment">/**</span><br><span class="hljs-comment">         * 第二步：从左向右扫描，找第一个大于基准值的元素</span><br><span class="hljs-comment">         * 条件：只要当前元素 &lt;= 基准值且指针未相遇，就继续右移</span><br><span class="hljs-comment">         */</span><br>        <span class="hljs-keyword">while</span> (i &lt; j &amp;&amp; pArray[i] &lt;= <span class="hljs-built_in">key</span>)<br>        &#123;<br>            i++;  <span class="hljs-comment">// 左指针向右移动</span><br>        &#125;<br>        <span class="hljs-comment">// 找到了比基准大的元素，将其放到右边j的位置</span><br>        <span class="hljs-comment">// 注意：此时pArray[j]的值已经被移动到前面，可以直接覆盖</span><br>        pArray[j] = pArray[i];<br>    &#125;<br>    <br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 第三步：基准值归位</span><br><span class="hljs-comment">     * 此时i == j，这个位置就是基准值的最终位置</span><br><span class="hljs-comment">     * 左边所有元素 &lt;= 基准值，右边所有元素 &gt;= 基准值</span><br><span class="hljs-comment">     */</span><br>    pArray[i] = <span class="hljs-built_in">key</span>;<br>    <br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 第四步：递归处理左右子区间</span><br><span class="hljs-comment">     * 对基准值左边和右边的部分分别进行快速排序</span><br><span class="hljs-comment">     */</span><br>    <br>    <span class="hljs-comment">// 如果左边区间至少有两个元素（Low &lt; i-1），递归排序左半部分</span><br>    <span class="hljs-keyword">if</span> (Low &lt; i<span class="hljs-number">-1</span>)<br>    &#123;<br>        <span class="hljs-title function_">QuickSort</span>(pArray, Low, i<span class="hljs-number">-1</span>);  <span class="hljs-comment">// 排序区间 [Low, i-1]</span><br>    &#125;<br>    <br>    <span class="hljs-comment">// 如果右边区间至少有两个元素（i+1 &lt; High），递归排序右半部分</span><br>    <span class="hljs-keyword">if</span> (i+<span class="hljs-number">1</span> &lt; High)<br>    &#123;<br>        <span class="hljs-title function_">QuickSort</span>(pArray, i+<span class="hljs-number">1</span>, High); <span class="hljs-comment">// 排序区间 [i+1, High]</span><br>    &#125;<br>    <br>    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;  <span class="hljs-comment">// 排序完成</span><br>&#125;<br></code></pre></td></tr></table></figure>
+<h5 id="复杂度-2">复杂度</h5>
+<p><strong>时间复杂度：</strong></p>
+<ul>
+<li>最坏：O(n²)</li>
+<li>平均：O(nlog₂n)</li>
+<li>最好：O(nlog₂n)</li>
+</ul>
+<p><strong>空间复杂度：</strong></p>
+<ul>
+<li>O(log₂n)不稳定</li>
+</ul>
+<h1>三、常见算法</h1>
+<h2 id="采集、滤波、标定、补偿算法">采集、滤波、标定、补偿算法</h2>
+<h1>四、JTAG/SWD 调试</h1>
 
                 
               </div>
