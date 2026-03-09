@@ -19,15 +19,15 @@
   <meta name="author" content="LynBambAria">
   <meta name="keywords" content="">
   
-    <meta name="description" content="一、实习项目 二、全国大学生智能车竞赛 三、全国大学生建模大赛 3.1 聚类算法 3.1.1 简单介绍聚类算法 四、网络与分布式系统创新大赛 五、智能健康检测手表 六、嵌入式Linux&#x2F;Android系统移植 七、温湿度测量系统">
+    <meta name="description" content="一、实习项目 二、全国大学生智能车竞赛 硬件参数 芯片 CH32V307    参数 规格     内核 青稞 V4F (RISC-V RV32IMACF)   主频 144 MHz   内存 64KB SRAM + 256KB Flash   FPU 单精度浮点   外设 USB2.0、以太网、多路串口    摄像头 MT9V03X    参数 规格     分辨率 752×480 (VGA)">
 <meta property="og:type" content="article">
 <meta property="og:title" content="简历项目提问">
 <meta property="og:url" content="http://example.com/2025/11/16/%E9%9D%A2%E7%BB%8F/%E7%AE%80%E5%8E%86%E9%A1%B9%E7%9B%AE%E6%8F%90%E9%97%AE/index.html">
 <meta property="og:site_name" content="凛竹九歌.">
-<meta property="og:description" content="一、实习项目 二、全国大学生智能车竞赛 三、全国大学生建模大赛 3.1 聚类算法 3.1.1 简单介绍聚类算法 四、网络与分布式系统创新大赛 五、智能健康检测手表 六、嵌入式Linux&#x2F;Android系统移植 七、温湿度测量系统">
+<meta property="og:description" content="一、实习项目 二、全国大学生智能车竞赛 硬件参数 芯片 CH32V307    参数 规格     内核 青稞 V4F (RISC-V RV32IMACF)   主频 144 MHz   内存 64KB SRAM + 256KB Flash   FPU 单精度浮点   外设 USB2.0、以太网、多路串口    摄像头 MT9V03X    参数 规格     分辨率 752×480 (VGA)">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2025-11-16T06:50:35.852Z">
-<meta property="article:modified_time" content="2026-03-05T11:20:25.977Z">
+<meta property="article:modified_time" content="2026-03-09T01:43:13.601Z">
 <meta property="article:author" content="LynBambAria">
 <meta name="twitter:card" content="summary_large_image">
   
@@ -240,7 +240,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          82 字
+          626 字
         
       </span>
     
@@ -251,7 +251,7 @@
         
         
         
-          1 分钟
+          6 分钟
         
       </span>
     
@@ -302,7 +302,7 @@
               <p id="updated-time" class="note note-info" style="">
                 
                   
-                    本文最后更新于 2026年3月5日 晚上
+                    本文最后更新于 2026年3月9日 上午
                   
                 
               </p>
@@ -313,9 +313,117 @@
                 <span id="more"></span>
 <h1>一、实习项目</h1>
 <h1>二、全国大学生智能车竞赛</h1>
+<h2 id="硬件参数">硬件参数</h2>
+<h3 id="芯片">芯片</h3>
+<p>CH32V307</p>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>规格</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>内核</td>
+<td>青稞 V4F (RISC-V RV32IMACF)</td>
+</tr>
+<tr>
+<td>主频</td>
+<td>144 MHz</td>
+</tr>
+<tr>
+<td>内存</td>
+<td>64KB SRAM + 256KB Flash</td>
+</tr>
+<tr>
+<td>FPU</td>
+<td>单精度浮点</td>
+</tr>
+<tr>
+<td>外设</td>
+<td>USB2.0、以太网、多路串口</td>
+</tr>
+</tbody>
+</table>
+<h3 id="摄像头">摄像头</h3>
+<p>MT9V03X</p>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>规格</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>分辨率</td>
+<td>752×480 (VGA)</td>
+</tr>
+<tr>
+<td>快门类型</td>
+<td>全局快门 (Global Shutter)</td>
+</tr>
+<tr>
+<td>帧率</td>
+<td>60fps (全分辨率)</td>
+</tr>
+<tr>
+<td>输出格式</td>
+<td>8/10/12-bit 并行或 LVDS</td>
+</tr>
+<tr>
+<td>像素尺寸</td>
+<td>6μm × 6μm</td>
+</tr>
+<tr>
+<td>典型应用</td>
+<td>工业检测、机器视觉、车载辅助</td>
+</tr>
+</tbody>
+</table>
+<h2 id="图像采集">图像采集</h2>
+<p>MT9V034以DVP并行口输出VGA帧数据，CH32V307通过GPIO/FSMC直采到片上SRAM，经二值化压缩为45KB位图后，用查表法在CPU缓存内完成八邻域检测，全程不离开64KB内存，最终输出结构化目标数据而非原始图像，本质上是二维数组。</p>
+<h2 id="八邻域动态阈值算法">八邻域动态阈值算法</h2>
+<p>八邻域动态检测算法是一种通过检查像素周围8个相邻像素的灰度或颜色变化，并结合自适应阈值动态判断边缘或连通区域的图像处理技术。</p>
+<h3 id=""></h3>
+<h2 id="直角转弯、十字路口、斑马线算法">直角转弯、十字路口、斑马线算法</h2>
+<table>
+<thead>
+<tr>
+<th>场景</th>
+<th>二值图特征</th>
+<th>八邻域模式</th>
+<th>几何判据</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>十字路口</strong></td>
+<td>两条主线垂直相交，四象限延伸</td>
+<td>中心点8邻域全1，四臂长度&gt;阈值</td>
+<td>夹角85°-95°，四方向连续性</td>
+</tr>
+<tr>
+<td><strong>直角弯</strong></td>
+<td>单线90°转弯，一侧有路一侧无</td>
+<td>转角点6邻域1，两臂一长一短</td>
+<td>夹角80°-100°，单侧道路消失</td>
+</tr>
+<tr>
+<td><strong>斑马线</strong></td>
+<td>多条平行短线，无连续主线</td>
+<td>离散点簇，水平方向重复模式</td>
+<td>无垂直主线，短线长宽比&lt;3:1</td>
+</tr>
+</tbody>
+</table>
+<h3 id="特征点、夹角实现方式">特征点、夹角实现方式</h3>
+<p>重叠特征点和夹角计算通过&quot;霍夫空间投票+峰值聚类&quot;在VGA二值图上实现，核心是用极坐标参数空间将分散的线特征聚类为结构化几何。</p>
+<p>将图像空间中离散的边缘点映射到参数空间（ρ-θ极坐标）进行累加投票，使共线像素在参数空间形成峰值，再通过寻找局部最大值聚类出主导直线方向，从而将分散的图像特征转化为结构化的几何参数。</p>
 <h1>三、全国大学生建模大赛</h1>
-<h2 id="3-1-聚类算法">3.1 聚类算法</h2>
-<h3 id="3-1-1-简单介绍聚类算法">3.1.1 简单介绍聚类算法</h3>
+<h2 id="聚类算法">聚类算法</h2>
+<h3 id="简单介绍聚类算法">简单介绍聚类算法</h3>
 <h1>四、网络与分布式系统创新大赛</h1>
 <h1>五、智能健康检测手表</h1>
 <h1>六、嵌入式Linux/Android系统移植</h1>
@@ -377,7 +485,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>更新于</div>
-          <div>2026年3月5日</div>
+          <div>2026年3月9日</div>
         </div>
       
       
