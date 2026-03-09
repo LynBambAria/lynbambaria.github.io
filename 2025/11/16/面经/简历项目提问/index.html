@@ -27,7 +27,7 @@
 <meta property="og:description" content="一、实习项目 二、全国大学生智能车竞赛 硬件参数 芯片 CH32V307    参数 规格     内核 青稞 V4F (RISC-V RV32IMACF)   主频 144 MHz   内存 64KB SRAM + 256KB Flash   FPU 单精度浮点   外设 USB2.0、以太网、多路串口    摄像头 MT9V03X    参数 规格     分辨率 752×480 (VGA)">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2025-11-16T06:50:35.852Z">
-<meta property="article:modified_time" content="2026-03-09T01:43:13.601Z">
+<meta property="article:modified_time" content="2026-03-09T08:39:52.211Z">
 <meta property="article:author" content="LynBambAria">
 <meta name="twitter:card" content="summary_large_image">
   
@@ -240,7 +240,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          626 字
+          3.8k 字
         
       </span>
     
@@ -251,7 +251,7 @@
         
         
         
-          6 分钟
+          32 分钟
         
       </span>
     
@@ -302,7 +302,7 @@
               <p id="updated-time" class="note note-info" style="">
                 
                   
-                    本文最后更新于 2026年3月9日 上午
+                    本文最后更新于 2026年3月9日 下午
                   
                 
               </p>
@@ -386,7 +386,8 @@
 <p>MT9V034以DVP并行口输出VGA帧数据，CH32V307通过GPIO/FSMC直采到片上SRAM，经二值化压缩为45KB位图后，用查表法在CPU缓存内完成八邻域检测，全程不离开64KB内存，最终输出结构化目标数据而非原始图像，本质上是二维数组。</p>
 <h2 id="八邻域动态阈值算法">八邻域动态阈值算法</h2>
 <p>八邻域动态检测算法是一种通过检查像素周围8个相邻像素的灰度或颜色变化，并结合自适应阈值动态判断边缘或连通区域的图像处理技术。</p>
-<h3 id=""></h3>
+<h3 id="路径跟踪稳定性提升80-是怎么计算出来的">路径跟踪稳定性提升80%是怎么计算出来的</h3>
+<p>横向偏移标准差从X cm降至0.2X cm</p>
 <h2 id="直角转弯、十字路口、斑马线算法">直角转弯、十字路口、斑马线算法</h2>
 <table>
 <thead>
@@ -422,10 +423,378 @@
 <p>重叠特征点和夹角计算通过&quot;霍夫空间投票+峰值聚类&quot;在VGA二值图上实现，核心是用极坐标参数空间将分散的线特征聚类为结构化几何。</p>
 <p>将图像空间中离散的边缘点映射到参数空间（ρ-θ极坐标）进行累加投票，使共线像素在参数空间形成峰值，再通过寻找局部最大值聚类出主导直线方向，从而将分散的图像特征转化为结构化的几何参数。</p>
 <h1>三、全国大学生建模大赛</h1>
-<h2 id="聚类算法">聚类算法</h2>
-<h3 id="简单介绍聚类算法">简单介绍聚类算法</h3>
+<h2 id="LRFMC模型和K-Means聚类">LRFMC模型和K-Means聚类</h2>
+<h3 id="什么是RFM模型，什么是LRFMC模型">什么是RFM模型，什么是LRFMC模型</h3>
+<p>这两个模型都是非常经典的用户价值分析模型，广泛用于客户关系管理（CRM）和精细化运营中。简单来说，RFM 是基础版，而 LRFMC 是针对特定行业（如航空、大额消费）的进化版。</p>
+<ul>
+<li>
+<p>L（Length，会员入会时长/成为会员的时间长度）： 用户加入会员的时间。入会越久，通常粘性越高，但也可能是“沉睡老客户”。</p>
+</li>
+<li>
+<p>R（Recency，最近一次乘坐/消费时间间隔）： 同上，最近一次乘机距今多久。</p>
+</li>
+<li>
+<p>F（Frequency，消费频率）： 特定时间段内的乘机次数。</p>
+</li>
+<li>
+<p>M（Monetary，消费金额）： 特定时间段内的总花费（或舱位等级对应的价值）。</p>
+</li>
+<li>
+<p>C（舱位等级/距离系数）： 这是一个新增的维度，用于衡量用户是否倾向于乘坐高等级舱位（头等舱/商务舱）或长途飞行。</p>
+</li>
+</ul>
+<h3 id="为什么选择改进RFM模型为LRFMC？">为什么选择改进RFM模型为LRFMC？</h3>
+<ul>
+<li>
+<p>增加 L（入会时长）： 在航空业，一个老会员即使最近一年飞得少，但其历史贡献和品牌忠诚度依然存在，不能简单将其归为“流失客户”。L 维度可以区分“新晋高价值用户”和“资深老客户”。</p>
+</li>
+<li>
+<p>增加 C（舱位等级）： 同样是消费 5000 元，可能是买了一次经济舱，也可能是买了一次商务舱。利润率完全不同。C 维度能更好地识别真正的高利润贡献者。</p>
+</li>
+</ul>
+<p>将 5 个维度进行打分和聚类，可以将用户分为几类：</p>
+<ul>
+<li>
+<p>高价值/忠诚用户： L 长，R 近，F 高，M 高，C 高（通常是商务人士）。</p>
+</li>
+<li>
+<p>潜力发展用户： L 较短，R 近，F 中等，M 中等（新注册但活跃的用户）。</p>
+</li>
+<li>
+<p>一般挽留用户： L 长，R 远（很久没飞了），F 曾经很高（沉睡的老会员）。</p>
+</li>
+<li>
+<p>低价值用户： 各项指标都低（价格敏感型，偶尔买一次特价票）。</p>
+</li>
+</ul>
+<h3 id="什么是K-Means聚类">什么是K-Means聚类</h3>
+<p>K-Means 聚类算法是一种非常经典且应用广泛的无监督学习算法，主要用于将数据划分为若干个组（即“簇”），使得同一组内的数据点相似度尽可能高，而不同组间的数据点相似度尽可能低。</p>
+<h3 id="K-Means聚类核心算法">K-Means聚类核心算法</h3>
+<p>K-Means 通过迭代的方式不断优化，主要包含 4 个步骤：</p>
+<ol>
+<li>
+<p>初始化： 随机选择 K 个点作为初始的“簇中心”。</p>
+</li>
+<li>
+<p>分配： 对于数据集中的每一个点，计算它到 K 个中心的距离，把它归给距离最近的那个中心（比如，离红心近的归为红组，离蓝心近的归为蓝组）。</p>
+</li>
+<li>
+<p>更新： 所有点分配完毕后，每个簇内部重新计算“中心点”（通常是计算该簇所有点的平均值位置），将旧的簇中心移动到新的均值位置。</p>
+</li>
+<li>
+<p>迭代： 重复步骤 2 和 3，直到满足以下任一条件停止：</p>
+</li>
+</ol>
+<ul>
+<li>
+<p>簇中心的位置几乎不再变化（收敛）。</p>
+</li>
+<li>
+<p>达到了预设的最大迭代次数。</p>
+</li>
+</ul>
+<h3 id="你是怎么确定K值的？有没有用过肘部法则或轮廓系数？">你是怎么确定K值的？有没有用过肘部法则或轮廓系数？</h3>
+<p>业务解释性验证</p>
+<ul>
+<li>最终K值需要结合业务可解释性</li>
+<li>例如：K=5对应&quot;重要价值客户、重要保持客户、新客户、流失客户、低价值客户&quot;</li>
+</ul>
+<p>肘部法则 (Elbow Method)</p>
+<ul>
+<li>计算不同K值下的SSE(误差平方和)</li>
+<li>寻找&quot;拐点&quot;——K增大时SSE下降速度明显减缓的点</li>
+</ul>
 <h1>四、网络与分布式系统创新大赛</h1>
+<h2 id="MOG2">MOG2</h2>
+<h3 id="什么是MOG2算法">什么是MOG2算法</h3>
+<p>MOG2是一种自适应的背景建模算法，通过为每个像素维护多个高斯分布来处理复杂的动态背景，并能自动检测阴影。它是传统计算机视觉中做运动检测（如安防监控、人流统计、交通流量检测）的基石算法之一。</p>
+<h3 id="MOG2算法核心">MOG2算法核心</h3>
+<ol>
+<li>
+<p>初始化：读取前几帧，为每个像素初始化几个高斯分布。</p>
+</li>
+<li>
+<p>像素匹配：对于新的帧，将当前像素的值与它对应的已有的高斯分布进行匹配。</p>
+</li>
+<li>
+<p>模型更新：</p>
+</li>
+</ol>
+<ul>
+<li>
+<p>如果匹配上了某个分布，就用新的像素值更新那个分布的参数（均值和方差）。</p>
+</li>
+<li>
+<p>如果没有匹配上，且分布数量未达上限，则创建一个新的分布；如果已达上限，则替换掉最不可能代表背景的那个分布。</p>
+</li>
+</ul>
+<ol start="4">
+<li>前景/背景分割：</li>
+</ol>
+<ul>
+<li>
+<p>将所有的高斯分布按照优先级（权重/标准差）排序。</p>
+</li>
+<li>
+<p>选取前B个分布作为背景模型（B由算法根据权重和自适应阈值决定）。</p>
+</li>
+<li>
+<p>如果当前像素匹配上了这前B个分布中的任何一个，则该像素是背景（显示为黑色）；否则，是前景（显示为白色）或阴影（显示为灰色）。</p>
+</li>
+</ul>
+<h2 id="形态学操作">形态学操作</h2>
+<h3 id="腐蚀">腐蚀</h3>
+<p>就像“侵蚀”一样，它会收缩或细化图像中的前景物体（通常白色部分）。</p>
+<p>效果：</p>
+<ul>
+<li>
+<p>消除物体边界的毛刺和不规则凸起。</p>
+</li>
+<li>
+<p>分离两个原本有细微连接的物体。</p>
+</li>
+<li>
+<p>去除小的、孤立的噪声点（因为这些点太小，结构元素无法完全放进去）。</p>
+</li>
+</ul>
+<h3 id="膨胀">膨胀</h3>
+<p>与腐蚀相反，它就像“扩张”一样，会增长或加粗图像中的前景物体。</p>
+<p>效果：</p>
+<ul>
+<li>
+<p>填充物体内部的细小空洞。</p>
+</li>
+<li>
+<p>连接两个原本距离很近的物体。</p>
+</li>
+<li>
+<p>使物体的边界向外扩张，加粗物体。</p>
+</li>
+</ul>
+<h3 id="开运算">开运算</h3>
+<p>先腐蚀，后膨胀。</p>
+<p>效果：</p>
+<ul>
+<li>主要用于去除图像中细小的噪声点，并平滑较大物体的边界，同时不会明显改变物体的面积。</li>
+</ul>
+<h3 id="闭运算">闭运算</h3>
+<p>先膨胀，后腐蚀。</p>
+<p>效果：</p>
+<ul>
+<li>主要用于填充物体内部的细小空洞，并连接邻近的物体，同时不会明显改变物体的面积。</li>
+</ul>
 <h1>五、智能健康检测手表</h1>
+<h2 id="请简要介绍一下这个项目">请简要介绍一下这个项目</h2>
+<p>这是一个基于 ESP32-S3 的独立全栈项目，我负责从硬件选型、嵌入式固件开发到 Flutter 移动端 APP 的完整链路。最大的挑战在于资源受限条件下的多目标权衡——在 512KB SRAM 的约束下，同时满足实时心率算法、30fps 图形界面、稳定 BLE 连接和低功耗待机的需求。</p>
+<p>比如内存分配上，我将 LVGL 双缓冲区分配合计控制在 150KB 以内，为心率算法预留 80KB 缓冲区，BLE 协议栈占用约 100KB，剩余留给 FreeRTOS 内核和任务栈。当发现帧率不稳定时，我通过 lv_timer_handler() 的调用频率调整和任务优先级重新分配，而非简单增加缓冲区。</p>
+<h2 id="ESP32-S3-选型理由">ESP32-S3 选型理由</h2>
+<table>
+<thead>
+<tr>
+<th>维度</th>
+<th>ESP32-S3 优势</th>
+<th>对比说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>AI 指令集</strong></td>
+<td>内置 <strong>Vector 指令集</strong> (SIMD)，支持加速 DSP 运算</td>
+<td>虽然心率算法没用上，但为后续 PPG 信号 ML 处理预留空间</td>
+</tr>
+<tr>
+<td><strong>内存配置</strong></td>
+<td>512KB SRAM + 384KB ROM，支持外部 PSRAM 最高 8MB</td>
+<td>STM32F4 系列通常 128-256KB，需外接 RAM 才能跑 LVGL</td>
+</tr>
+<tr>
+<td><strong>无线性能</strong></td>
+<td><strong>BLE 5.0</strong> + Wi-Fi 双模，射频性能稳定</td>
+<td>对比 nRF52 系列需外接屏幕驱动，S3 单芯片解决</td>
+</tr>
+<tr>
+<td><strong>图形加速</strong></td>
+<td>支持 <strong>2D 图形加速</strong> (DMA + 专用指令)</td>
+<td>LVGL 在 S3 上可利用 <code>esp_lcd</code> 驱动实现硬件加速</td>
+</tr>
+<tr>
+<td><strong>功耗控制</strong></td>
+<td>支持 <strong>ULP 协处理器</strong> + 多种低功耗模式</td>
+<td>比 ESP32 功耗降低 30%，且支持更精细的电源域控制</td>
+</tr>
+<tr>
+<td><strong>生态工具</strong></td>
+<td>ESP-IDF 成熟，支持 JTAG 调试、功耗分析工具</td>
+<td>STM32 生态分散，ESP 统一工具链降低开发成本</td>
+</tr>
+</tbody>
+</table>
+<h2 id="FreeRTOS-任务划分与调度">FreeRTOS 任务划分与调度</h2>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-comment">// 任务优先级定义（数字越大优先级越高）</span><br><span class="hljs-meta">#<span class="hljs-keyword">define</span> PRIORITY_SENSOR_ACCEL     4  <span class="hljs-comment">// 加速度计高频采样</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">define</span> PRIORITY_HEART_RATE       3  <span class="hljs-comment">// 心率算法计算</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">define</span> PRIORITY_BLE_COMM         2  <span class="hljs-comment">// 蓝牙通信</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">define</span> PRIORITY_UI_REFRESH       1  <span class="hljs-comment">// LVGL 渲染</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">define</span> PRIORITY_POWER_MGMT       0  <span class="hljs-comment">// 功耗管理（空闲任务）</span></span><br></code></pre></td></tr></table></figure>
+<p>四个核心任务：</p>
+<ol>
+<li>传感器采集任务 (vTaskSensorAccel)</li>
+</ol>
+<ul>
+<li>频率：100Hz（加速度计），25Hz（心率传感器）</li>
+<li>机制：使用 二值信号量 由硬件定时器触发，确保采样间隔精确</li>
+<li>数据：写入 循环缓冲区 (Ring Buffer)，供算法任务消费</li>
+</ul>
+<ol start="2">
+<li>心率算法任务 (vTaskHeartRateAlgo)</li>
+</ol>
+<ul>
+<li>触发：当缓冲区积累 5 秒数据（125 个 PPG 样本）时启动</li>
+<li>处理：带通滤波（0.5-4Hz）+ 峰值检测 + 运动伪影消除</li>
+<li>输出：通过 队列 发送心率值到 UI 任务和 BLE 任务</li>
+</ul>
+<ol start="3">
+<li>UI 刷新任务 (vTaskUIRefresh)</li>
+</ol>
+<ul>
+<li>机制：调用 lv_timer_handler()，配合 vTaskDelayUntil() 实现固定 33ms 周期（30fps）</li>
+<li>优化：使用 双缓冲区 + DMA 传输，CPU 仅在渲染时活跃</li>
+<li>通信：通过 事件组 (Event Group) 接收心率更新、蓝牙状态变化等事件</li>
+</ul>
+<ol start="4">
+<li>蓝牙通信任务 (vTaskBLEComm)</li>
+</ol>
+<ul>
+<li>模式：基于 ESP-IDF 的 NimBLE 协议栈</li>
+<li>机制：使用 队列 接收待发送数据，主循环阻塞在 ble_gap_event() 回调</li>
+<li>流控：实现 滑动窗口 + ACK 确认 机制，防止数据堆积</li>
+</ul>
+<p>我刻意将心率算法设为独立高优先级任务，而非在传感器中断中处理，是因为 PPG 信号处理涉及浮点运算和滤波器，耗时约 50-80ms。如果在中断中执行会导致加速度计采样抖动，独立任务配合信号量触发既能保证实时性，又不阻塞其他任务。</p>
+<h2 id="心率传感器和加速度计分别用的是什么型号？你通过什么接口（I2C-SPI）读取数据？在读取时遇到过什么问题（如总线死锁、数据错乱）？">心率传感器和加速度计分别用的是什么型号？你通过什么接口（I2C/SPI）读取数据？在读取时遇到过什么问题（如总线死锁、数据错乱）？</h2>
+<p>MAX30102，ADXL345。都是I2C。调试时发现 MAX30102 偶尔无响应，查看日志发现 I2C 死锁：从机拉低 SDA 未释放。根本原因是 ESP32-S3 在深度休眠唤醒时，I2C 控制器复位但传感器仍处于发送状态。</p>
+<p>协议层面：启用 I2C 超时检测，避免无限等待</p>
+<h2 id="你是如何实现“心率监测响应时间-2秒”的？">你是如何实现“心率监测响应时间 &lt; 2秒”的？</h2>
+<ol>
+<li>
+<p>快速启动优化<br>
+MAX30102 从休眠到稳定采样需 500ms，我采用 预加热机制：检测到抬腕动作（加速度计中断）提前 300ms 启动心率传感器</p>
+</li>
+<li>
+<p>FreeRTOS 实时保障</p>
+</li>
+</ol>
+<ul>
+<li>心率算法任务优先级设为 3，高于 UI 和 BLE</li>
+<li>使用 信号量 由传感器数据就绪中断触发，避免轮询开销</li>
+<li>算法执行时间 80ms，远小于采样周期 40ms（25Hz），留有充足余量</li>
+</ul>
+<p>实测从手指接触传感器到显示心率，平均 1.4 秒，最坏情况（低灌注度）1.8 秒。这 2 秒包含了 500ms 硬件启动 + 800ms 数据积累 + 100ms 算法处理</p>
+<h2 id="“运动状态智能判断”具体是怎么做的？如何区分走路、跑步和静止？如何避免误触发？">“运动状态智能判断”具体是怎么做的？如何区分走路、跑步和静止？如何避免误触发？</h2>
+<p>ADXL345内置活动/非活动检测引擎，可以独立于主 CPU 运行阈值判断。我充分利用这一特性实现了 分级唤醒机制，大幅降低功耗。</p>
+<h2 id="待机功耗-1-2mA-的测量与实现">待机功耗 1.2mA 的测量与实现</h2>
+<table>
+<thead>
+<tr>
+<th>模块</th>
+<th>电流消耗</th>
+<th>优化措施</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ESP32-S3 深度休眠 (RTC 内存保持)</td>
+<td>8 μA</td>
+<td>仅保留 RTC 快速内存用于快速唤醒</td>
+</tr>
+<tr>
+<td>ULP 协处理器运行</td>
+<td>150 μA</td>
+<td>每 100ms 唤醒一次检查 ADXL345</td>
+</tr>
+<tr>
+<td>ADXL345 活动检测模式</td>
+<td>25 μA</td>
+<td>启用 LINK/ACT 功能，自动切换活动/非活动</td>
+</tr>
+<tr>
+<td>MAX30102 待机</td>
+<td>0.7 μA</td>
+<td>完全断电，通过 MOSFET 控制电源</td>
+</tr>
+<tr>
+<td>TFT 屏幕 + 背光</td>
+<td>0</td>
+<td>背光 PWM 占空比 0%，屏幕进入休眠</td>
+</tr>
+<tr>
+<td>电源管理芯片静态电流</td>
+<td>50 μA</td>
+<td>选用 TPS63001 高效率 Buck-Boost</td>
+</tr>
+<tr>
+<td><strong>合计</strong></td>
+<td><strong>~233 μA</strong></td>
+<td>理论值</td>
+</tr>
+<tr>
+<td><strong>实测待机</strong></td>
+<td><strong>1.2 mA</strong></td>
+<td>含 BLE 广播维持、RTC 时钟、漏电流</td>
+</tr>
+</tbody>
+</table>
+<h2 id="在低功耗模式下，你是如何保持蓝牙连接或者维持定时功能的？">在低功耗模式下，你是如何保持蓝牙连接或者维持定时功能的？</h2>
+<p>保留了蓝牙广播</p>
+<p>BLE 蓝牙通信</p>
+<h2 id="你自定义的-BLE-数据传输协议具体是怎样的？如何保证“传输成功率-98-”？">你自定义的 BLE 数据传输协议具体是怎样的？如何保证“传输成功率 98%”？</h2>
+<table>
+<thead>
+<tr>
+<th>Service</th>
+<th>UUID</th>
+<th>Characteristics</th>
+<th>功能</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>设备信息服务</strong></td>
+<td>0x180A</td>
+<td>Model Number, Battery Level</td>
+<td>设备识别、电量上报</td>
+</tr>
+<tr>
+<td><strong>心率服务</strong></td>
+<td>0x180D</td>
+<td>Heart Rate Measurement (Notify)</td>
+<td>实时心率推送</td>
+</tr>
+<tr>
+<td><strong>运动数据服务</strong></td>
+<td>0xFF00 (自定义)</td>
+<td>Step Count, Activity Type, Calories</td>
+<td>运动状态同步</td>
+</tr>
+<tr>
+<td><strong>命令控制服务</strong></td>
+<td>0xFF01 (自定义)</td>
+<td>Command (Write), Response (Notify)</td>
+<td>配置同步、固件升级</td>
+</tr>
+<tr>
+<td><strong>数据传输服务</strong></td>
+<td>0xFF02 (自定义)</td>
+<td>Data Packet (Write/Notify), ACK (Write)</td>
+<td>历史数据批量传输</td>
+</tr>
+</tbody>
+</table>
+<p>自定义协议帧结构：<br>
+[1B: 帧头 0xAA] [1B: 类型] [1B: 序列号] [1B: 长度] [0-20B: 数据] [1B: CRC8] [1B: 帧尾 0x55]</p>
+<p>可靠性保障机制：<br>
+ACK + 超时重传<br>
+CRC8 校验</p>
+<h2 id="Flutter-APP-如何与手表进行配对和数据同步的？遇到过丢包问题吗？怎么解决的？">Flutter APP 如何与手表进行配对和数据同步的？遇到过丢包问题吗？怎么解决的？</h2>
+<ol>
+<li>手表广播 → 2. APP 扫描发现 → 3. 用户点击连接<br>
+→ 4. 数字比较配对 (Numeric Comparison) → 5. 绑定存储 LTK<br>
+→ 6. 服务发现 → 7. 使能 Notify → 8. 时间同步</li>
+</ol>
 <h1>六、嵌入式Linux/Android系统移植</h1>
 <h1>七、温湿度测量系统</h1>
 
