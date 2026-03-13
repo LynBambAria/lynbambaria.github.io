@@ -52,7 +52,7 @@
 <meta property="og:image" content="http://example.com/2026/03/05/%E9%9D%A2%E7%BB%8F/%E5%B5%8C%E5%85%A5%E5%BC%8F%E5%85%AB%E8%82%A1%E6%96%87/assets/0_20.png">
 <meta property="og:image" content="http://example.com/2026/03/05/%E9%9D%A2%E7%BB%8F/%E5%B5%8C%E5%85%A5%E5%BC%8F%E5%85%AB%E8%82%A1%E6%96%87/assets/0_1.png">
 <meta property="article:published_time" content="2026-03-05T11:20:47.034Z">
-<meta property="article:modified_time" content="2026-03-09T01:43:16.305Z">
+<meta property="article:modified_time" content="2026-03-13T13:43:50.847Z">
 <meta property="article:author" content="LynBambAria">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="http://example.com/2026/03/05/%E9%9D%A2%E7%BB%8F/%E5%B5%8C%E5%85%A5%E5%BC%8F%E5%85%AB%E8%82%A1%E6%96%87/assets/0_1.png">
@@ -266,7 +266,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          38k 字
+          40k 字
         
       </span>
     
@@ -277,7 +277,7 @@
         
         
         
-          316 分钟
+          334 分钟
         
       </span>
     
@@ -328,7 +328,7 @@
               <p id="updated-time" class="note note-info" style="">
                 
                   
-                    本文最后更新于 2026年3月9日 上午
+                    本文最后更新于 2026年3月13日 晚上
                   
                 
               </p>
@@ -2960,16 +2960,42 @@ $$</p>
 <h2 id="6-数和二叉树">6. 数和二叉树</h2>
 <h2 id="7-图">7. 图</h2>
 <h2 id="8-查找">8. 查找</h2>
+<h3 id="折半查找讲解">折半查找<a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV19m411S723?spm_id_from=333.788.player.switch&amp;vd_source=1e7a1d78191a0fa98e1dcb37d701d4f6&amp;trackid=web_related_0.router-related-2479604-grjpt.1773286172851.941">讲解</a></h3>
+<h4 id="核心思想">核心思想</h4>
+<p>折半查找基于一个前提，那就是查找的序列必须是有序的（可以是升序或者降序排列，通常以升序为例讲解）。它的核心思想是每次都将查找区间缩小一半，通过不断比较目标元素和区间中间元素的大小关系，来确定下一步查找的区间范围，直至找到目标元素或者确定目标元素不存在于该序列中。</p>
+<p>打个比方，想象我们在一本按照页码从小到大排好序的字典里查找一个单词，我们不会从第一页开始一页一页往后翻，而是先翻到字典正中间那一页，看看目标单词在这页之前还是之后，然后把另一半范围排除掉，再继续在剩下的区间里重复这个过程，这样能快速缩小查找范围，大大提高查找效率。</p>
+<h4 id="推导步骤">推导步骤</h4>
+<ol>
+<li>
+<p><strong>初始化查找区间：</strong><br>
+首先确定整个查找区间，一般是整个有序序列的起始位置（通常设为索引 0）到结束位置（序列长度减 1）。</p>
+</li>
+<li>
+<p><strong>循环比较与区间缩小：</strong><br>
+在每一轮查找中，计算当前查找区间的中间元素索引（通过起始索引和结束索引计算得出），然后将目标元素与中间元素进行比较：</p>
+<ol>
+<li>如果目标元素等于中间元素，那么查找成功，直接返回中间元素的索引。</li>
+<li>如果目标元素小于中间元素，说明目标元素在区间的前半部分，此时将查找区间的结束索引更新为中间元素索引减 1，缩小到前半区间继续查找。</li>
+<li>如果目标元素大于中间元素，意味着目标元素在区间的后半部分，那就把查找区间的起始索引更新为中间元素索引加 1，缩小到后半区间查找。<br>
+<strong>查找结束判断：</strong></li>
+</ol>
+</li>
+<li>
+<p>不断重复上述步骤，直到查找区间的起始索引大于结束索引，这表示整个有序序列都已经遍历完了，目标元素不存在，此时返回一个表示未找到的标识（比如 -1 等，具体根据实际情况设定）。</p>
+</li>
+</ol>
+<h4 id="代码">代码</h4>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-meta">#<span class="hljs-keyword">include</span><span class="hljs-string">&lt;stdio.h&gt;</span></span><br> <br><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">binary_search</span><span class="hljs-params">(<span class="hljs-type">int</span> *p,<span class="hljs-type">int</span> value,<span class="hljs-type">int</span> len)</span></span>&#123;<br>	<span class="hljs-type">int</span> low = <span class="hljs-number">0</span>;<br>	<span class="hljs-type">int</span> high = len - <span class="hljs-number">1</span>;<br>	<span class="hljs-type">int</span> mid = <span class="hljs-number">0</span>;<br> <br>	<span class="hljs-keyword">while</span>(low &lt;= high)&#123;<br>		mid = (high + low) / <span class="hljs-number">2</span>;<span class="hljs-comment">//取中间位置</span><br>		<span class="hljs-keyword">if</span>(p[mid] == value)<br>			<span class="hljs-keyword">return</span> mid;<span class="hljs-comment">//返回元素所在索引位置</span><br>		<span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span>(p[mid] &gt; value)<br>			high = mid - <span class="hljs-number">1</span>;<span class="hljs-comment">//说明查找的元素在左边，所以右边界要变化</span><br>		<span class="hljs-keyword">else</span><br>			low = mid + <span class="hljs-number">1</span>;<span class="hljs-comment">//说明查找的元素在右边，所以左边界要变化</span><br>	&#125;<br>	<span class="hljs-keyword">return</span> <span class="hljs-number">-1</span>;<br> <br>&#125;<br> <br><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span>&#123;<br> <br>	<span class="hljs-type">int</span> arr[<span class="hljs-number">5</span>] = &#123;<span class="hljs-number">10</span>,<span class="hljs-number">23</span>,<span class="hljs-number">45</span>,<span class="hljs-number">67</span>,<span class="hljs-number">100</span>&#125;;<br>	<span class="hljs-type">int</span> len = <span class="hljs-built_in">sizeof</span>(arr) / <span class="hljs-built_in">sizeof</span>(arr[<span class="hljs-number">0</span>]);<br>	<span class="hljs-type">int</span> value = <span class="hljs-number">0</span>;<br>	<span class="hljs-type">int</span> ret = <span class="hljs-number">0</span>;<br> <br>	<span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;数组中的元素值为:&quot;</span>);<br>	<span class="hljs-keyword">for</span>(<span class="hljs-type">int</span> i = <span class="hljs-number">0</span>;i &lt; len;i++)<br>		<span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;%d &quot;</span>,arr[i]);<br>	<br>	<span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;\n&quot;</span>);<br> <br>	<span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;请输入你要查找的值：&quot;</span>);<br>	<span class="hljs-built_in">scanf</span>(<span class="hljs-string">&quot;%d&quot;</span>,&amp;value);<br> <br>	ret = <span class="hljs-built_in">binary_search</span>(arr,value,len);<br> <br>	<span class="hljs-keyword">if</span>(ret &lt; <span class="hljs-number">0</span>)&#123;<br>		<span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;你想要查找的值 %d 不存在.\n&quot;</span>,value);<br>	&#125;<span class="hljs-keyword">else</span>&#123;<br>		<span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;你要查找的值 %d 在索引位置 %d 处\n&quot;</span>,value,ret);<br>	&#125;<br> <br>	<span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
 <h2 id="9-排序">9. 排序</h2>
 <h3 id="9-1-交换排序">9.1 交换排序</h3>
 <h4 id="冒泡排序讲解">冒泡排序<a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV181421876R/?spm_id_from=333.337.search-card.all.click&amp;vd_source=1e7a1d78191a0fa98e1dcb37d701d4f6">讲解</a></h4>
-<h5 id="核心思想">核心思想</h5>
+<h5 id="核心思想-2">核心思想</h5>
 <p>每一轮遍历数组，比较相邻的两个元素：</p>
 <ul>
 <li>如果 前一个元素 &gt; 后一个元素，则交换它们的位置。</li>
 <li>每一轮结束后，当前未排序部分的最大值会“沉”到末尾，类似气泡上浮。</li>
 </ul>
-<h5 id="推导步骤">推导步骤</h5>
+<h5 id="推导步骤-2">推导步骤</h5>
 <p>假设对一个长度为 n 的数组 arr 进行升序排序：</p>
 <ol>
 <li><strong>外层循环：</strong> 控制排序轮数（共 n-1 轮）。</li>
@@ -3001,9 +3027,15 @@ $$</p>
 <li>O(1)（原地排序，属于稳定排序）</li>
 </ul>
 <h4 id="快速排序讲解">快速排序<a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1y4421Z7hK?spm_id_from=333.788.videopod.sections&amp;vd_source=1e7a1d78191a0fa98e1dcb37d701d4f6">讲解</a></h4>
-<h5 id="核心思想-2">核心思想</h5>
+<h5 id="核心思想-3">核心思想</h5>
 <p>分治法，选基准pivot，将数组分两部分左边≤pivot右边≥pivot，递归排左右子数组。嵌入式常用高效排序。</p>
-<h5 id="代码">代码</h5>
+<h5 id="推导步骤-3">推导步骤</h5>
+<p>从下标为1的数据开始，准备遍历整个数组。<br>
+第一次，a[1]和a[0]比较，若是a[0] &gt; a[1],则把a[1]插入到a[0]前面，若是a[0] &lt; a[1]，则不变<br>
+第二次，a[2]和其前面的一个数据进行比较，若是a[2]前面的一个数据大于a[2],则把a[2]插入到a[0],a[1]中合适的位置，构成有序表<br>
+第三次，a[3]和a[3]和其前面的一个数据进行比较，若是a[3]前面的一个数据大于a[3],则把a[3]插入到a[0],a[1]，a[2]中合适的位置，构成有序表<br>
+然后依次进行遍历，直到完成排序。</p>
+<h5 id="代码-2">代码</h5>
 <figure class="highlight processing"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br></pre></td><td class="code"><pre><code class="hljs processing"><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * 快速排序函数</span><br><span class="hljs-comment"> * @param pArray 待排序的整数数组指针</span><br><span class="hljs-comment"> * @param Low    排序区间的起始下标</span><br><span class="hljs-comment"> * @param High   排序区间的结束下标</span><br><span class="hljs-comment"> * @return       返回0表示排序完成</span><br><span class="hljs-comment"> */</span><br><span class="hljs-type">int</span> <span class="hljs-title function_">QuickSort</span>(<span class="hljs-type">int</span> *pArray, <span class="hljs-type">int</span> Low, <span class="hljs-type">int</span> High)<br>&#123;<br>    <span class="hljs-type">int</span> i = <span class="hljs-number">0</span>;  <span class="hljs-comment">// 左指针，用于从左向右扫描</span><br>    <span class="hljs-type">int</span> j = <span class="hljs-number">0</span>;  <span class="hljs-comment">// 右指针，用于从右向左扫描</span><br>    <span class="hljs-type">int</span> <span class="hljs-built_in">key</span> = <span class="hljs-number">0</span>; <span class="hljs-comment">// 基准值，用于比较和分区</span><br>    <br>    <span class="hljs-comment">// 初始化：选择第一个元素作为基准值</span><br>    <span class="hljs-built_in">key</span> = pArray[Low];  <span class="hljs-comment">// 将区间第一个元素设为基准</span><br>    j = High;           <span class="hljs-comment">// j指向区间最后一个元素</span><br>    i = Low;            <span class="hljs-comment">// i指向区间第一个元素</span><br>    <br>    <span class="hljs-comment">// 核心分区过程：当左右指针相遇时结束</span><br>    <span class="hljs-keyword">while</span> (i &lt; j)<br>    &#123;<br>        <span class="hljs-comment">/**</span><br><span class="hljs-comment">         * 第一步：从右向左扫描，找第一个小于基准值的元素</span><br><span class="hljs-comment">         * 条件：只要当前元素 &gt;= 基准值且指针未相遇，就继续左移</span><br><span class="hljs-comment">         */</span><br>        <span class="hljs-keyword">while</span> (i &lt; j &amp;&amp; pArray[j] &gt;= <span class="hljs-built_in">key</span>)<br>        &#123;<br>            j--;  <span class="hljs-comment">// 右指针向左移动</span><br>        &#125;<br>        <span class="hljs-comment">// 找到了比基准小的元素，将其放到左边i的位置</span><br>        <span class="hljs-comment">// 注意：此时pArray[i]的值已经被保存到key中，可以直接覆盖</span><br>        pArray[i] = pArray[j];<br>        <br>        <span class="hljs-comment">/**</span><br><span class="hljs-comment">         * 第二步：从左向右扫描，找第一个大于基准值的元素</span><br><span class="hljs-comment">         * 条件：只要当前元素 &lt;= 基准值且指针未相遇，就继续右移</span><br><span class="hljs-comment">         */</span><br>        <span class="hljs-keyword">while</span> (i &lt; j &amp;&amp; pArray[i] &lt;= <span class="hljs-built_in">key</span>)<br>        &#123;<br>            i++;  <span class="hljs-comment">// 左指针向右移动</span><br>        &#125;<br>        <span class="hljs-comment">// 找到了比基准大的元素，将其放到右边j的位置</span><br>        <span class="hljs-comment">// 注意：此时pArray[j]的值已经被移动到前面，可以直接覆盖</span><br>        pArray[j] = pArray[i];<br>    &#125;<br>    <br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 第三步：基准值归位</span><br><span class="hljs-comment">     * 此时i == j，这个位置就是基准值的最终位置</span><br><span class="hljs-comment">     * 左边所有元素 &lt;= 基准值，右边所有元素 &gt;= 基准值</span><br><span class="hljs-comment">     */</span><br>    pArray[i] = <span class="hljs-built_in">key</span>;<br>    <br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 第四步：递归处理左右子区间</span><br><span class="hljs-comment">     * 对基准值左边和右边的部分分别进行快速排序</span><br><span class="hljs-comment">     */</span><br>    <br>    <span class="hljs-comment">// 如果左边区间至少有两个元素（Low &lt; i-1），递归排序左半部分</span><br>    <span class="hljs-keyword">if</span> (Low &lt; i<span class="hljs-number">-1</span>)<br>    &#123;<br>        <span class="hljs-title function_">QuickSort</span>(pArray, Low, i<span class="hljs-number">-1</span>);  <span class="hljs-comment">// 排序区间 [Low, i-1]</span><br>    &#125;<br>    <br>    <span class="hljs-comment">// 如果右边区间至少有两个元素（i+1 &lt; High），递归排序右半部分</span><br>    <span class="hljs-keyword">if</span> (i+<span class="hljs-number">1</span> &lt; High)<br>    &#123;<br>        <span class="hljs-title function_">QuickSort</span>(pArray, i+<span class="hljs-number">1</span>, High); <span class="hljs-comment">// 排序区间 [i+1, High]</span><br>    &#125;<br>    <br>    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;  <span class="hljs-comment">// 排序完成</span><br>&#125;<br></code></pre></td></tr></table></figure>
 <h5 id="复杂度-2">复杂度</h5>
 <p><strong>时间复杂度：</strong></p>
@@ -3016,9 +3048,81 @@ $$</p>
 <ul>
 <li>O(log₂n)不稳定</li>
 </ul>
+<p><strong>Q：</strong> 什么情况下会退化？<br>
+<strong>A：</strong> 当每次选择的基准值都是当前子数组的最大值或最小值时（例如，数组已经有序或逆序，且我每次都固定选最左边或最右边的元素作为基准），函数会将数组分成一个极其不平衡的两部分：一部分只有一个元素，另一部分有 n-1 个元素。这样递归下去，时间复杂度就会退化为 O(n²)。</p>
+<p><strong>Q：</strong> 在嵌入式系统中如何避免？<br>
+<strong>A：</strong></p>
+<ol>
+<li>
+<p>优化基准选择（三数取中）： 不使用固定位置的元素，而是取 arr[low]、arr[mid] 和 arr[high] 三个元素的中位数作为基准。这能大大降低在近似有序数组上选到最差基准的概率。</p>
+</li>
+<li>
+<p>切换排序策略（混合排序）： 在快速排序的递归过程中，监测子数组的长度。如果当前子数组的长度小于某个阈值（比如 10 或 20），就停止递归快排，转而使用插入排序。因为插入排序在小规模数据集上（通常由于缓存局部性较好）比快排的递归调用开销更小。</p>
+</li>
+<li>
+<p>递归转迭代： 如刚才提到的，使用手动模拟栈来避免系统栈溢出。</p>
+</li>
+</ol>
+<h3 id="9-2-插入排序">9.2 插入排序</h3>
+<h4 id="直接插入排序讲解">直接插入排序<a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1tf421Q7eh?spm_id_from=333.788.videopod.sections&amp;vd_source=1e7a1d78191a0fa98e1dcb37d701d4f6">讲解</a></h4>
+<h5 id="核心思想-4">核心思想</h5>
+<p>直接插入排序(Straight Insertion Sort)是一种基于逐个元素插入的简单排序算法，属于插入排序类的基本方法。其核心思想是通过将未排序元素依次插入已排序序列的适当位置实现整体有序化，特别适用于小规模或部分有序数据‌。</p>
+<h5 id="代码-3">代码</h5>
+<figure class="highlight arduino"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><code class="hljs arduino"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdint.h&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdbool.h&gt;</span></span><br><br><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * @brief 直接插入排序 (适用于嵌入式)</span><br><span class="hljs-comment"> * @param arr 待排序数组</span><br><span class="hljs-comment"> * @param size 数组元素个数</span><br><span class="hljs-comment"> * @note 适用于小规模数据或基本有序的数据</span><br><span class="hljs-comment"> */</span><br><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">insertionSort</span><span class="hljs-params">(<span class="hljs-type">int32_t</span> arr[], <span class="hljs-type">uint32_t</span> size)</span></span><br><span class="hljs-function"></span>&#123;<br>    <span class="hljs-comment">// 防御性编程：检查空指针（嵌入式常见）</span><br>    <span class="hljs-keyword">if</span> (arr == <span class="hljs-literal">NULL</span> || size &lt; <span class="hljs-number">2</span>) &#123;<br>        <span class="hljs-keyword">return</span>;<br>    &#125;<br><br>    <span class="hljs-type">uint32_t</span> i, j;<br>    <span class="hljs-type">int32_t</span> key;<br><br>    <span class="hljs-keyword">for</span> (i = <span class="hljs-number">1</span>; i &lt; size; i++) &#123;<br>        key = arr[i];  <span class="hljs-comment">// 取出当前待插入的元素（即“抽牌”）</span><br>        j = i - <span class="hljs-number">1</span>;<br><br>        <span class="hljs-comment">// 在有序区从后向前扫描，寻找插入位置</span><br>        <span class="hljs-comment">// 注意：这里没有使用哨兵，因为嵌入式内存可能寸土寸金</span><br>        <span class="hljs-keyword">while</span> (j &lt; i &amp;&amp; arr[j] &gt; key) &#123; <span class="hljs-comment">// j &lt; i 是为了防止 j 下溢（实际上 j 是 uint32，&gt;=0）</span><br>            arr[j + <span class="hljs-number">1</span>] = arr[j];<br>            j--;<br>        &#125;<br>        arr[j + <span class="hljs-number">1</span>] = key;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<h5 id="复杂度-3">复杂度</h5>
+<p><strong>时间复杂度：</strong></p>
+<ul>
+<li>最坏：O(n²)</li>
+<li>平均：O(n²)</li>
+<li>最好：O(n)</li>
+</ul>
+<p><strong>空间复杂度：</strong></p>
+<ul>
+<li>O(1)稳定</li>
+</ul>
+<p><strong>Q:</strong> 为什么嵌入式可能更喜欢它？<br>
+<strong>A：</strong></p>
+<ol>
+<li>
+<p>内存碎片/栈压力： 快速排序通常使用递归，递归调用会消耗栈空间（嵌入式栈通常很小，且递归过深有溢出风险）。插入排序是迭代的，无栈压力。</p>
+</li>
+<li>
+<p>Cache友好性： 对于小规模数据，插入排序的顺序访问模式对CPU Cache非常友好。</p>
+</li>
+<li>
+<p>稳定性： 插入排序是稳定的，这在某些对顺序有要求的控制逻辑中很重要。</p>
+</li>
+</ol>
+<h3 id="9-3-选择排序">9.3 选择排序</h3>
+<h4 id="简单选择排序讲解">简单选择排序<a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1kjsuenE8v?spm_id_from=333.788.videopod.sections&amp;vd_source=1e7a1d78191a0fa98e1dcb37d701d4f6">讲解</a></h4>
+<h5 id="核心思想-5">核心思想</h5>
+<p>以递增为例，在每一趟的简单选择排序过程中，每次选取当前元素最小的元素，将其作为有序子序列的第i，i+1，……个元素，依次进行下去，即和第一个元素交换，依次进行交换，直到剩余一个元素，此时整个序列已经有序，每一趟简单选择排序可确定一个元素的最终位置。</p>
+<h5 id="推导步骤-4">推导步骤</h5>
+<p>算法实现步骤:(以升序为例)</p>
+<ol>
+<li>在元素集合arr[i]~arr[n-1]中选择关键码最小(大)的数据元素.<br>
+若它不是这组元素中的第一个(最后一个)元素,则将它与这组元素中的第一个(最后一个)元素交换.</li>
+<li>在剩余的arr[i+1]~arr<a href="arr%5Bi%5D~arr%5Bn-2%5D">n-1</a>集合中,重复上述步骤,直到集合剩余一个元素.</li>
+</ol>
+<h5 id="代码-4">代码</h5>
+<figure class="highlight excel"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><code class="hljs excel">//交换函数<br>void Swap(<span class="hljs-built_in">int</span>* a, <span class="hljs-built_in">int</span>* b)<br>&#123;<br>	<span class="hljs-built_in">int</span> tmp = *a;<br>	*a = *b;<br>	*b = tmp;<br>&#125;<br> <br>//直接选则排序(升序)<br>void SelectSort(<span class="hljs-built_in">int</span>* a, <span class="hljs-built_in">int</span> <span class="hljs-built_in">n</span>)<br>&#123;<br>	<span class="hljs-built_in">int</span> <span class="hljs-built_in">left</span> = <span class="hljs-number">0</span>;<br> <br>	while (<span class="hljs-built_in">left</span> &lt; <span class="hljs-built_in">n</span> - <span class="hljs-number">1</span>)<br>	&#123;<br>		<span class="hljs-built_in">int</span> mini = <span class="hljs-built_in">left</span>;<br>		for (<span class="hljs-built_in">int</span> i = <span class="hljs-built_in">left</span> + <span class="hljs-number">1</span>; i &lt;= <span class="hljs-built_in">n</span> - <span class="hljs-number">1</span>; i++)<br>		&#123;<br>			<span class="hljs-built_in">if</span> (a[i] &lt; a[mini])<br>			&#123;<br>				mini = i;<br>			&#125;<br>		&#125;<br>		Swap(&amp;a[<span class="hljs-built_in">left</span>], &amp;a[mini]);<br>		<span class="hljs-built_in">left</span>++;<br>	&#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<h5 id="复杂度-4">复杂度</h5>
+<p><strong>时间复杂度：</strong></p>
+<ul>
+<li>最坏：O(n²)</li>
+<li>平均：O(n²)</li>
+<li>最好：O(n²)</li>
+</ul>
+<p><strong>空间复杂度：</strong></p>
+<ul>
+<li>O(1)不稳定</li>
+</ul>
+<h4 id="折半插入排序讲解">折半插入排序<a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1E1421b7Eb?spm_id_from=333.788.videopod.sections&amp;vd_source=1e7a1d78191a0fa98e1dcb37d701d4f6">讲解</a></h4>
 <h1>三、常见算法</h1>
 <h2 id="采集、滤波、标定、补偿算法">采集、滤波、标定、补偿算法</h2>
 <h1>四、JTAG/SWD 调试</h1>
+<h1>五、 FreeRTOS</h1>
+<h1>六、 Linux</h1>
 
                 
               </div>
@@ -3076,7 +3180,7 @@ $$</p>
       
         <div class="license-meta-item license-meta-date">
           <div>更新于</div>
-          <div>2026年3月9日</div>
+          <div>2026年3月13日</div>
         </div>
       
       
